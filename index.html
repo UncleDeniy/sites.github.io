@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Личный веб-хаб</title>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --card: #141923;
+    --card-hover: #1b2230;
+    --border: #252d3d;
+    --text: #e2e8f0;
+    --muted: #8a94a6;
+    --accent: #3b82f6;
+    --pink: #ec4899;
+    --green: #10b981;
+  }
+  * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 24px 16px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  h1 { font-size: 22px; margin: 0; color: #fff; }
+  .search {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    width: 240px;
+  }
+  .search:focus { outline: none; border-color: var(--accent); }
+  .section-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 24px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    display: block;
+    text-decoration: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    transition: transform 0.15s, background 0.15s, border-color 0.15s;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    background: var(--card-hover);
+    border-color: var(--accent);
+  }
+  .card.sonya:hover { border-color: var(--pink); }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .card-title { font-size: 16px; font-weight: 700; color: #fff; }
+  .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .tag-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+  .tag-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+  .tag-pink { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+  .card-desc { font-size: 13px; color: var(--muted); margin: 0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Веб-хаб проектов</h1>
+      <div style="font-size:13px; color:var(--muted)">Мои инструменты и сайты для Сони</div>
+    </div>
+    <input type="text" class="search" id="searchInput" placeholder="Поиск по сайтам..." oninput="filterCards()">
+  </header>
+
+  <div class="section-title">Мои проекты и утилиты</div>
+  <div class="grid">
+    <a href="./minsk-plan/" class="card">
+      <div class="card-top">
+        <span class="card-title">Minsk 2032</span>
+        <span class="tag tag-green">Финансы</span>
+      </div>
+      <p class="card-desc">Трекер накоплений, автокурс BYN/USD, график вкладов и симулятор переезда.</p>
+    </a>
+
+    <a href="./syslog-news/" class="card">
+      <div class="card-top">
+        <span class="card-title">SYSLOG NEWS</span>
+        <span class="tag tag-blue">Медиа / IT</span>
+      </div>
+      <p class="card-desc">Личная IT-газета в олдскульном стиле без визуального шума.</p>
+    </a>
+  </div>
+
+  <div class="section-title">Проекты для Сони</div>
+  <div class="grid">
+    <a href="./sonya-project/" class="card sonya">
+      <div class="card-top">
+        <span class="card-title">Сайт Сони №1</span>
+        <span class="tag tag-pink">Для Сони</span>
+      </div>
+      <p class="card-desc">Описание первого проекта (замени название и ссылку на нужную папку).</p>
+    </a>
+  </div>
+</div>
+
+<script>
+  function filterCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = text.includes(q) ? 'block' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
