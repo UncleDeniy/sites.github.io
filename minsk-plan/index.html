@@ -1,1 +1,1289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0b0e14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Minsk 2032">
+<meta name="application-name" content="Minsk 2032">
+<meta name="format-detection" content="telephone=no">
+<title>Minsk 2032 — Финансовый трекер переезда</title>
 
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+
+<!-- iOS Splash screens -->
+<link rel="apple-touch-startup-image" href="./splash/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-828x1792.png"  media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./splash/splash-750x1334.png"  media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+
+<style>
+  :root {
+    --bg: #0b0e14;
+    --card: #141923;
+    --card-hover: #1a202c;
+    --border: #252d3d;
+    --text: #e2e8f0;
+    --muted: #8a94a6;
+    --accent: #3b82f6;
+    --green: #10b981;
+    --yellow: #f59e0b;
+    --purple: #8b5cf6;
+    --red: #ef4444;
+  }
+  * {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    line-height: 1.5;
+  }
+  body {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+  .container { max-width: 1040px; margin: 0 auto; }
+
+  .hub-nav { display: flex; align-items: center; margin-bottom: 14px; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    text-decoration: none; padding: 8px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; transition: all 0.2s;
+  }
+  .back-btn:hover { color: #fff; border-color: #fff; }
+
+  .header {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .header h1 { font-size: 22px; margin: 0; color: #fff; }
+  .rate-box {
+    background: var(--card); border: 1px solid var(--border); padding: 8px 14px;
+    border-radius: 10px; font-size: 13px; display: flex; align-items: center; gap: 10px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
+  .dot.offline { background: var(--yellow); }
+
+  .tabs {
+    display: flex; gap: 8px; margin-bottom: 20px;
+    border-bottom: 1px solid var(--border); padding-bottom: 12px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px;
+    font-weight: 600; transition: all 0.2s;
+  }
+  .tab-btn:hover { color: #fff; background: var(--card-hover); }
+  .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px; margin-bottom: 16px;
+  }
+  .card h2 {
+    font-size: 16px; margin: 0 0 16px; color: #fff;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+  .input-row { display: flex; gap: 8px; }
+  input, select {
+    width: 100%; background: #0d1118; border: 1px solid var(--border); color: #fff;
+    padding: 9px 12px; border-radius: 8px; font-size: 16px; font-weight: 600;
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  .btn {
+    background: var(--accent); color: #fff; border: none; padding: 9px 14px;
+    border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;
+    white-space: nowrap; -webkit-tap-highlight-color: transparent;
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn-sm { padding: 6px 10px; font-size: 12px; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-outline:hover { color: #fff; border-color: #fff; }
+  .btn-green { background: var(--green); color: #052e16; }
+
+  .stat-big { font-size: 28px; font-weight: 800; color: var(--green); margin: 4px 0; font-variant-numeric: tabular-nums; }
+  .stat-sub { font-size: 13px; color: var(--muted); }
+  .progress-wrap { background: #0d1118; border-radius: 99px; height: 14px; overflow: hidden; margin: 14px 0; border: 1px solid var(--border); }
+  .progress-bar { background: linear-gradient(90deg, var(--accent), var(--green)); height: 100%; width: 0%; transition: width 0.4s ease; }
+
+  .asv-mini { height: 4px; background: #0d1118; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .asv-mini-bar { height: 100%; width: 0%; background: var(--green); transition: width 0.4s ease, background 0.3s ease; }
+  .asv-mini-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  .alert {
+    padding: 12px 14px; border-radius: 10px; font-size: 13px;
+    margin-bottom: 14px; display: none;
+  }
+  .alert-yellow { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; }
+  .alert-red    { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.3);  color: #f87171; }
+  .alert-blue   { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #60a5fa; }
+
+  .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+  th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { color: var(--muted); font-weight: 500; font-size: 13px; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .b-alfa  { background: rgba(239,68,68,0.15);  color: #f87171; }
+  .b-tbank { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .b-sber  { background: rgba(16,185,129,0.15); color: #34d399; }
+
+  .chart-container { width: 100%; overflow-x: auto; margin-top: 10px; }
+  svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 13px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-color { width: 12px; height: 12px; border-radius: 3px; }
+  .status-pill { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
+  .dep-row-warn { background: rgba(245,158,11,0.06); }
+  .dep-row-expired { opacity: 0.55; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hub-nav">
+    <a href="../" class="back-btn">← В хаб</a>
+  </div>
+
+  <div class="header">
+    <div>
+      <h1>Переезд: Владивосток → Минск (к 27 годам)</h1>
+      <div class="stat-sub">Личный финансовый план • Старт: ноябрь 2026</div>
+    </div>
+    <div class="rate-box">
+      <span class="dot" id="rateDot"></span>
+      <div>
+        <div>BYN: <strong id="headerByn" style="color:#fff">27.42 ₽</strong> • USD: <strong id="headerUsd" style="color:#fff">90.00 ₽</strong></div>
+        <div style="font-size:11px; color:var(--muted)" id="rateStatus">Загрузка курса...</div>
+      </div>
+      <button class="btn btn-sm btn-outline" onclick="fetchRates()" title="Обновить курс по сети">↻</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('dash', this)">1. Счета и Симулятор</button>
+    <button class="tab-btn" onclick="switchTab('charts', this)">2. Графики и Прогноз</button>
+    <button class="tab-btn" onclick="switchTab('report', this)">3. Отчётность и Журнал</button>
+  </div>
+
+  <div id="tab-dash" class="tab-content active">
+    <div class="grid">
+      <div class="card">
+        <h2>Мои счета сейчас (₽)</h2>
+        <div class="field">
+          <label>Альфа-Банк («Стань миллионером» 10%)</label>
+          <div class="input-row">
+            <input type="number" step="0.01" id="alfa" oninput="manualBalanceChange('alfa')">
+            <button class="btn btn-green" onclick="quickAdd('alfa', 1000, 'Учебный день (+1 000 ₽)')">+1т</button>
+            <button class="btn" onclick="quickAdd('alfa', 5000, 'Ежемесячный бонус (+5 000 ₽)')">+5т</button>
+          </div>
+          <div class="asv-mini"><div class="asv-mini-bar" id="asvMiniAlfa"></div></div>
+          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniAlfaText">0 / 1,4 млн ₽</span></div>
+        </div>
+        <div class="field">
+          <label>Т-Банк («СмартВклад» 14% / накопительный)</label>
+          <div class="input-row">
+            <input type="number" step="0.01" id="tbank" oninput="manualBalanceChange('tbank')">
+            <button class="btn btn-outline" onclick="quickAdd('tbank', 50000, 'Открытие вклада (+50 000 ₽)')">+50т</button>
+          </div>
+          <div class="asv-mini"><div class="asv-mini-bar" id="asvMiniTbank"></div></div>
+          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniTbankText">0 / 1,4 млн ₽</span></div>
+        </div>
+        <div class="field">
+          <label>Сбербанк (резерв / вклады)</label>
+          <div class="input-row">
+            <input type="number" step="0.01" id="sber" oninput="manualBalanceChange('sber')">
+            <button class="btn btn-outline" onclick="quickAdd('sber', 10000, 'Пополнение Сбер (+10 000 ₽)')">+10т</button>
+          </div>
+          <div class="asv-mini"><div class="asv-mini-bar" id="asvMiniSber"></div></div>
+          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniSberText">0 / 1,4 млн ₽</span></div>
+        </div>
+        <div id="asvWarning" class="alert alert-red"></div>
+        <div id="currencyHint" class="alert alert-blue"></div>
+      </div>
+
+      <div class="card">
+        <h2>Прогресс до цели (2032 год)</h2>
+        <div class="stat-sub">Всего накоплено во всех банках:</div>
+        <div class="stat-big" id="totalSaved">0 ₽</div>
+        <div class="progress-wrap"><div class="progress-bar" id="progBar"></div></div>
+        <div class="stat-sub" id="progText">0% от цели</div>
+        <hr style="border:0; border-top:1px solid var(--border); margin: 16px 0;">
+        <div class="field">
+          <label>Целевая сумма с учётом инфляции (₽)</label>
+          <input type="number" id="goal" oninput="updateAll()">
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:14px;">
+          <span class="stat-sub">Осталось накопить:</span>
+          <strong style="color:#fff" id="leftToSave">0 ₽</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Копилка миль S7 Airlines</h2>
+      <div class="stat-sub" style="margin-bottom:14px;">
+        Повседневные траты по карте Т-Банк S7 копят мили. Билет Владивосток → Минск с багажом ≈ 30 000 миль. Прогресс покажет, насколько билет уже «оплачен» твоими тратами.
+      </div>
+      <div class="grid" style="margin-bottom:0; gap:12px;">
+        <div class="field" style="margin-bottom:0;">
+          <label>Текущий баланс миль</label>
+          <input type="number" id="s7Miles" min="0" step="1" onchange="updateMiles()">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Цель (миль на билет)</label>
+          <input type="number" id="s7Goal" min="0" step="1" onchange="updateMiles()">
+        </div>
+      </div>
+      <div class="progress-wrap" style="margin-top:16px;">
+        <div class="progress-bar" id="s7Bar" style="background: linear-gradient(90deg, var(--yellow), var(--green))"></div>
+      </div>
+      <div class="stat-sub" id="s7Text">0 из 30 000 миль</div>
+    </div>
+
+    <div class="card">
+      <h2>Активные вклады и сроки</h2>
+      <div class="stat-sub" style="margin-bottom:14px;">
+        За 5 дней до окончания вклад подсвечивается жёлтым — «пора перекладывать». Для промоставок «новые деньги» в Сбере и Альфе деньги должны «отлежаться» в другом банке 60–90 дней — не переводи раньше!
+      </div>
+      <div id="depositAlert" class="alert alert-yellow"></div>
+
+      <div class="grid" style="margin-bottom:14px; gap:10px;">
+        <div>
+          <div class="field" style="margin-bottom:8px;">
+            <label>Банк</label>
+            <select id="depBank">
+              <option value="Альфа-Банк">Альфа-Банк</option>
+              <option value="Т-Банк">Т-Банк</option>
+              <option value="Сбербанк">Сбербанк</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:8px;">
+            <label>Название вклада</label>
+            <input type="text" id="depName" placeholder="СмартВклад 14%">
+          </div>
+        </div>
+        <div>
+          <div class="field" style="margin-bottom:8px;">
+            <label>Сумма (₽)</label>
+            <input type="number" step="0.01" id="depAmount" placeholder="50000">
+          </div>
+          <div class="field" style="margin-bottom:8px;">
+            <label>Ставка, %</label>
+            <input type="number" step="0.1" id="depRate" placeholder="14">
+          </div>
+        </div>
+        <div>
+          <div class="field" style="margin-bottom:8px;">
+            <label>Дата окончания</label>
+            <input type="date" id="depEnd">
+          </div>
+        </div>
+      </div>
+      <button class="btn" onclick="addDeposit()">+ Добавить вклад</button>
+
+      <div class="table-wrap" style="margin-top:18px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Банк</th>
+              <th>Название</th>
+              <th style="text-align:right">Ставка</th>
+              <th style="text-align:right">Сумма</th>
+              <th>Окончание</th>
+              <th style="text-align:right">Статус</th>
+            </tr>
+          </thead>
+          <tbody id="depositTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Симулятор расходов в Минске (пересчёт по курсу BYN)</h2>
+      <div class="grid" style="margin-bottom:0;">
+        <div>
+          <div class="field">
+            <label>Курс BYN к RUB (обновляется авто или вручную)</label>
+            <input type="number" step="0.01" id="rate" oninput="updateAll()">
+          </div>
+          <div class="field">
+            <label>Цена квартиры в Минске (BYN)</label>
+            <input type="number" id="flatByn" oninput="updateAll()">
+          </div>
+          <div class="field">
+            <label>Автомобиль в Минске (RUB, ориентир Geely Atlas)</label>
+            <input type="number" id="carRub" oninput="updateAll()">
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label>Электрика, косметика, лофт и мебель (RUB)</label>
+            <input type="number" id="repairRub" oninput="updateAll()">
+          </div>
+          <div class="field">
+            <label>Оформление, переезд и подушка безопасности (RUB)</label>
+            <input type="number" id="moveRub" oninput="updateAll()">
+          </div>
+          <div style="background:#0d1118; padding:14px; border-radius:10px; border:1px solid var(--border); margin-top:8px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span class="stat-sub">Квартира в рублях:</span>
+              <strong style="color:#fff" id="flatRubOut">0 ₽</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span class="stat-sub">Итого весь переезд (в ценах 2026):</span>
+              <strong style="color:var(--yellow)" id="totalCostOut">0 ₽</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span class="stat-sub">Остаток от базовых 12 млн ₽:</span>
+              <strong style="color:var(--green)" id="budgetLeftOut">0 ₽</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-charts" class="tab-content">
+    <div class="grid">
+      <div class="card">
+        <h2>Распределение текущего капитала по банкам</h2>
+        <div class="chart-container" id="bankBarChart"></div>
+      </div>
+      <div class="card">
+        <h2>Структура бюджета переезда (12 млн ₽)</h2>
+        <div class="chart-container" id="budgetBarChart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span>Живой трекер: Факт vs План (Ноя 2026 — Фев 2027)</span>
+        <span id="paceBadge" class="status-pill">В графике</span>
+      </h2>
+      <div class="stat-sub" style="margin-bottom:12px;">Жёлтая живая линия строится по реальным пополнениям из журнала поверх плановой кривой (с учётом паузы 16–31 января 2027).</div>
+      <div class="chart-container" id="nearTermChart"></div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-color" style="background:var(--yellow)"></span> <strong>Реальные накопления (факт)</strong></div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--accent)"></span> План (выход на 50 420 ₽ к 1 фев 2027)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Долгосрочная кривая роста до 27 лет (2026 — 2032 гг.)</h2>
+      <div class="stat-sub" style="margin-bottom:12px;">Жёлтая точка — твой текущий реальный капитал на общей шкале до 2032 года.</div>
+      <div class="chart-container" id="growthLineChart"></div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-color" style="background:var(--yellow)"></span> <strong>Твой текущий факт</strong></div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--green)"></span> Прогноз с инфляцией (18 млн ₽)</div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--accent)"></span> Прогноз в ценах 2026 (12 млн ₽)</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-report" class="tab-content">
+    <div class="grid">
+      <div class="card">
+        <h2>Добавить операцию в журнал</h2>
+        <div class="field">
+          <label>Банк</label>
+          <select id="logBank">
+            <option value="Альфа-Банк">Альфа-Банк («Стань миллионером»)</option>
+            <option value="Т-Банк">Т-Банк («СмартВклад»)</option>
+            <option value="Сбербанк">Сбербанк</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Тип и сумма (₽)</label>
+          <div class="input-row">
+            <select id="logType" style="width:45%">
+              <option value="Пополнение">Пополнение (+)</option>
+              <option value="Проценты">Проценты банка (+)</option>
+              <option value="Снятие">Снятие (-)</option>
+            </select>
+            <input type="number" step="0.01" id="logAmount" placeholder="1000">
+          </div>
+        </div>
+        <div class="field">
+          <label>Дата и комментарий</label>
+          <div class="input-row">
+            <input type="date" id="logDateInput" style="width:42%">
+            <input type="text" id="logNote" placeholder="Например: Учебный день">
+          </div>
+        </div>
+        <button class="btn" style="width:100%" onclick="addManualLog()">Записать операцию и обновить баланс</button>
+      </div>
+
+      <div class="card">
+        <h2>Сводка и резервное копирование</h2>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span class="stat-sub">Всего операций в журнале:</span>
+          <strong id="repCount">0</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <span class="stat-sub">Пополнено своими деньгами:</span>
+          <strong style="color:#fff" id="repDeposits">0 ₽</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:18px;">
+          <span class="stat-sub">Получено процентами от банков:</span>
+          <strong style="color:var(--green)" id="repInterest">0 ₽</strong>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--border); margin-bottom:16px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="exportJSON()">Скачать бэкап (JSON)</button>
+          <label class="btn btn-outline" style="cursor:pointer;">
+            Загрузить JSON
+            <input type="file" accept=".json" style="display:none" onchange="importJSON(event)">
+          </label>
+          <button class="btn btn-outline" style="color:var(--red); border-color:rgba(239,68,68,0.3)" onclick="resetAll()">Сбросить всё</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Налоговый контроль (НДФЛ с процентов)</h2>
+      <div class="stat-sub" style="margin-bottom:14px;">
+        Годовой доход по процентам сверх необлагаемого лимита облагается НДФЛ 13% (до 5 млн ₽). Лимит = <strong>1 000 000 ₽ × макс. ключевая ставка ЦБ за год</strong>. Проценты суммируются автоматически из журнала операций за выбранный год.
+      </div>
+
+      <div class="grid" style="margin-bottom:14px; gap:12px;">
+        <div class="field" style="margin-bottom:0;">
+          <label>Календарный год</label>
+          <select id="taxYearSelect" onchange="renderTax()"></select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Макс. ключевая ставка ЦБ за год, %</label>
+          <input type="number" step="0.1" id="taxCbRate" oninput="saveTaxCbRate()" placeholder="16">
+        </div>
+      </div>
+
+      <div style="background:#0d1118; padding:14px; border-radius:10px; border:1px solid var(--border); margin-top:8px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span class="stat-sub">Получено процентов за год:</span>
+          <strong style="color:#fff" id="taxInterest">0 ₽</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span class="stat-sub">Необлагаемый лимит (1 млн ₽ × ставка ЦБ):</span>
+          <strong style="color:var(--green)" id="taxLimit">160 000 ₽</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span class="stat-sub">Остаток необлагаемого лимита:</span>
+          <strong style="color:var(--accent)" id="taxRemain">160 000 ₽</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span class="stat-sub">Сумма превышения:</span>
+          <strong style="color:var(--muted)" id="taxExcess">0 ₽</strong>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
+        <div style="display:flex; justify-content:space-between;">
+          <span class="stat-sub">Ориентировочный налог к уплате (13%):</span>
+          <strong id="taxDue" style="color:var(--green)">Налог не начисляется</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Журнал операций</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Банк</th>
+              <th>Тип</th>
+              <th>Комментарий</th>
+              <th style="text-align:right">Сумма</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="logTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const defaultState = {
+    alfa: 2861.26,
+    tbank: 0,
+    sber: 0,
+    goal: 18000000,
+    rate: 27.42,
+    usdRate: 90.00,
+    rateDate: '23.11.2026 (базовый)',
+    flatByn: 323000,
+    carRub: 1289200,
+    repairRub: 1100000,
+    moveRub: 450000,
+    deposits: [],
+    s7Miles: 0,
+    s7MilesGoal: 30000,
+    taxCbRate: 16,
+    taxYear: new Date().getFullYear(),
+    logs: [
+      { id: 1, isoDate: '2026-11-23', date: '23.11.2026', bank: 'Альфа-Банк', type: 'Пополнение', amount: 2861.26, note: 'Стартовый остаток на счёте «Стань миллионером» (10%)' }
+    ]
+  };
+
+  const savedRaw = JSON.parse(localStorage.getItem('minskTrackerV3'));
+  let state = savedRaw ? { ...JSON.parse(JSON.stringify(defaultState)), ...savedRaw } : JSON.parse(JSON.stringify(defaultState));
+
+  function saveState() {
+    localStorage.setItem('minskTrackerV3', JSON.stringify(state));
+  }
+
+  function fmt(num) {
+    return Math.round(num).toLocaleString('ru-RU') + ' ₽';
+  }
+
+  function fmtExact(num) {
+    return num.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
+  }
+
+  function getTodayISO() {
+    const d = new Date();
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - (off * 60 * 1000));
+    return local.toISOString().split('T')[0];
+  }
+
+  function formatDisplayDate(isoStr) {
+    if (!isoStr || !isoStr.includes('-')) return isoStr;
+    const [y, m, d] = isoStr.split('-');
+    return `${d}.${m}.${y}`;
+  }
+
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+    if (tabId === 'charts') renderCharts();
+    if (tabId === 'report') { renderReport(); renderTax(); }
+    if (tabId === 'dash') { renderDepositList(); renderMiles(); }
+  }
+
+  async function fetchRates() {
+    const statusEl = document.getElementById('rateStatus');
+    const dotEl = document.getElementById('rateDot');
+    statusEl.textContent = 'Обновление курса...';
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const res = await fetch('https://www.cbr-xml-daily.ru/daily_json.js', { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (!res.ok) throw new Error('Network error');
+      const data = await res.json();
+
+      const byn = +(data.Valute.BYN.Value / data.Valute.BYN.Nominal).toFixed(2);
+      const usd = +(data.Valute.USD.Value / data.Valute.USD.Nominal).toFixed(2);
+      const nowStr = new Date().toLocaleDateString('ru-RU');
+
+      state.rate = byn;
+      state.usdRate = usd;
+      state.rateDate = nowStr;
+      document.getElementById('rate').value = byn;
+
+      dotEl.classList.remove('offline');
+      statusEl.textContent = `Онлайн (ЦБ РФ на ${nowStr})`;
+      updateAll();
+    } catch (e) {
+      dotEl.classList.add('offline');
+      statusEl.textContent = `Офлайн • сохранённый курс от ${state.rateDate}`;
+      document.getElementById('headerByn').textContent = state.rate.toFixed(2) + ' ₽';
+      document.getElementById('headerUsd').textContent = state.usdRate.toFixed(2) + ' ₽';
+    }
+  }
+
+  function quickAdd(bankKey, amount, noteText) {
+    const bankNames = { alfa: 'Альфа-Банк', tbank: 'Т-Банк', sber: 'Сбербанк' };
+    state[bankKey] = +(state[bankKey] + amount).toFixed(2);
+    document.getElementById(bankKey).value = state[bankKey];
+    const iso = getTodayISO();
+    state.logs.unshift({
+      id: Date.now(),
+      isoDate: iso,
+      date: formatDisplayDate(iso),
+      bank: bankNames[bankKey],
+      type: 'Пополнение',
+      amount: amount,
+      note: noteText
+    });
+    updateAll();
+  }
+
+  let manualTimer = null;
+  function manualBalanceChange(bankKey) {
+    const oldVal = state[bankKey];
+    const newVal = parseFloat(document.getElementById(bankKey).value) || 0;
+    const diff = +(newVal - oldVal).toFixed(2);
+    updateAll();
+
+    clearTimeout(manualTimer);
+    if (Math.abs(diff) >= 0.01) {
+      manualTimer = setTimeout(() => {
+        const bankNames = { alfa: 'Альфа-Банк', tbank: 'Т-Банк', sber: 'Сбербанк' };
+        const iso = getTodayISO();
+        state.logs.unshift({
+          id: Date.now(),
+          isoDate: iso,
+          date: formatDisplayDate(iso),
+          bank: bankNames[bankKey],
+          type: diff > 0 ? 'Пополнение' : 'Снятие',
+          amount: diff,
+          note: 'Ручная корректировка баланса'
+        });
+        saveState();
+      }, 1200);
+    }
+  }
+
+  function updateAll() {
+    state.alfa = parseFloat(document.getElementById('alfa').value) || 0;
+    state.tbank = parseFloat(document.getElementById('tbank').value) || 0;
+    state.sber = parseFloat(document.getElementById('sber').value) || 0;
+    state.goal = parseFloat(document.getElementById('goal').value) || 0;
+    state.rate = parseFloat(document.getElementById('rate').value) || 0;
+    state.flatByn = parseFloat(document.getElementById('flatByn').value) || 0;
+    state.carRub = parseFloat(document.getElementById('carRub').value) || 0;
+    state.repairRub = parseFloat(document.getElementById('repairRub').value) || 0;
+    state.moveRub = parseFloat(document.getElementById('moveRub').value) || 0;
+
+    saveState();
+
+    document.getElementById('headerByn').textContent = state.rate.toFixed(2) + ' ₽';
+    document.getElementById('headerUsd').textContent = state.usdRate.toFixed(2) + ' ₽';
+
+    const total = state.alfa + state.tbank + state.sber;
+    const left = Math.max(0, state.goal - total);
+    const pct = state.goal > 0 ? Math.min(100, (total / state.goal) * 100) : 0;
+
+    document.getElementById('totalSaved').textContent = fmtExact(total);
+    document.getElementById('progBar').style.width = pct.toFixed(2) + '%';
+    document.getElementById('progText').textContent = `${pct.toFixed(3)}% от цели ${fmt(state.goal)}`;
+    document.getElementById('leftToSave').textContent = fmt(left);
+
+    const flatRub = state.flatByn * state.rate;
+    const totalCost = flatRub + state.carRub + state.repairRub + state.moveRub;
+    const budgetLeft = 12000000 - totalCost;
+
+    document.getElementById('flatRubOut').textContent = fmt(flatRub);
+    document.getElementById('totalCostOut').textContent = fmt(totalCost);
+    const bLeftEl = document.getElementById('budgetLeftOut');
+    bLeftEl.textContent = fmt(budgetLeft);
+    bLeftEl.style.color = budgetLeft >= 0 ? 'var(--green)' : 'var(--red)';
+
+    renderASV();
+
+    if (document.getElementById('tab-charts').classList.contains('active')) renderCharts();
+  }
+
+  function renderASV() {
+    const ASV_LIMIT = 1400000;
+    const ASV_WARN = 1350000;
+
+    const banks = [
+      { key: 'alfa', name: 'Альфа-Банк', bar: 'asvMiniAlfa', text: 'asvMiniAlfaText' },
+      { key: 'tbank', name: 'Т-Банк', bar: 'asvMiniTbank', text: 'asvMiniTbankText' },
+      { key: 'sber', name: 'Сбербанк', bar: 'asvMiniSber', text: 'asvMiniSberText' }
+    ];
+
+    let overLimitBanks = [];
+
+    banks.forEach(b => {
+      const val = state[b.key] || 0;
+      const pct = Math.min(100, (val / ASV_LIMIT) * 100);
+      const barEl = document.getElementById(b.bar);
+      const txtEl = document.getElementById(b.text);
+
+      if (barEl) {
+        barEl.style.width = pct + '%';
+        barEl.style.background = pct >= 100 ? 'var(--red)' : pct >= 80 ? 'var(--yellow)' : 'var(--green)';
+      }
+      if (txtEl) {
+        txtEl.textContent = `${Math.round(val).toLocaleString('ru-RU')} / 1 400 000 ₽`;
+        txtEl.style.color = pct >= 100 ? 'var(--red)' : pct >= 80 ? 'var(--yellow)' : 'var(--muted)';
+      }
+      if (val > ASV_WARN) overLimitBanks.push({ name: b.name, val });
+    });
+
+    const warnEl = document.getElementById('asvWarning');
+    if (warnEl) {
+      if (overLimitBanks.length > 0) {
+        warnEl.style.display = 'block';
+        const lines = overLimitBanks.map(b => `• ${b.name}: ${fmt(b.val)} (превышение над лимитом 1,4 млн: ${fmt(b.val - ASV_LIMIT)})`).join('<br>');
+        warnEl.innerHTML = `⚠ <strong>Внимание, перелимит по АСВ!</strong><br>${lines}<br><em>Всё, что выше 1 400 000 ₽ в одном банке, государством не страхуется.</em>`;
+      } else {
+        warnEl.style.display = 'none';
+      }
+    }
+
+    const total = state.alfa + state.tbank + state.sber;
+    const currEl = document.getElementById('currencyHint');
+    if (currEl) {
+      if (total >= 1500000) {
+        const lowPct = Math.round(total * 0.40);
+        const highPct = Math.round(total * 0.50);
+        currEl.style.display = 'block';
+        currEl.innerHTML = `💱 <strong>Валютная защита.</strong> Общий капитал ${fmt(total)} превысил 1,5 млн ₽. Жильё в РБ привязано к доллару — рассмотри перевод <strong>${fmt(lowPct)} – ${fmt(highPct)}</strong> (40–50%) в валютные депозиты (юань/доллар) для защиты от курсовых рисков.`;
+      } else {
+        currEl.style.display = 'none';
+      }
+    }
+  }
+
+  function addDeposit() {
+    const bank = document.getElementById('depBank').value;
+    const name = document.getElementById('depName').value.trim();
+    const amount = parseFloat(document.getElementById('depAmount').value);
+    const rate = parseFloat(document.getElementById('depRate').value) || 0;
+    const endDate = document.getElementById('depEnd').value;
+
+    if (!amount || amount <= 0) return alert('Укажите сумму вклада');
+    if (!endDate) return alert('Укажите дату окончания');
+
+    state.deposits = state.deposits || [];
+    state.deposits.push({
+      id: Date.now(),
+      bank,
+      name,
+      amount,
+      rate,
+      endDate
+    });
+
+    document.getElementById('depName').value = '';
+    document.getElementById('depAmount').value = '';
+    document.getElementById('depRate').value = '';
+
+    saveState();
+    renderDepositList();
+  }
+
+  function deleteDeposit(id) {
+    state.deposits = (state.deposits || []).filter(d => d.id !== id);
+    saveState();
+    renderDepositList();
+  }
+
+  function renderDepositList() {
+    const tbody = document.getElementById('depositTableBody');
+    const alertEl = document.getElementById('depositAlert');
+    if (!tbody) return;
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const deposits = [...(state.deposits || [])].sort((a, b) => (a.endDate || '').localeCompare(b.endDate || ''));
+
+    if (deposits.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px">Пока нет активных вкладов. Добавь первый, чтобы видеть сроки.</td></tr>';
+      if (alertEl) alertEl.style.display = 'none';
+      return;
+    }
+
+    let nearEnd = [];
+
+    tbody.innerHTML = deposits.map(d => {
+      const end = d.endDate ? new Date(d.endDate + 'T00:00:00') : null;
+      const daysLeft = end ? Math.ceil((end - now) / (1000 * 60 * 60 * 24)) : null;
+
+      let statusHtml = '<span class="badge" style="background:rgba(138,148,166,0.15); color:var(--muted)">без даты</span>';
+      let rowClass = '';
+
+      if (daysLeft !== null) {
+        if (daysLeft < 0) {
+          statusHtml = '<span class="badge" style="background:rgba(239,68,68,0.15); color:#f87171">истёк</span>';
+          rowClass = 'dep-row-expired';
+        } else if (daysLeft <= 5) {
+          statusHtml = `<span class="badge" style="background:rgba(245,158,11,0.25); color:#fbbf24">⚠ ${daysLeft} дн.</span>`;
+          rowClass = 'dep-row-warn';
+          nearEnd.push(`${d.bank} • ${d.name || 'вклад'} (${fmt(d.amount)}) — через ${daysLeft} дн.`);
+        } else if (daysLeft <= 30) {
+          statusHtml = `<span class="badge" style="background:rgba(59,130,246,0.15); color:#60a5fa">${daysLeft} дн.</span>`;
+        } else {
+          statusHtml = `<span class="badge" style="background:rgba(16,185,129,0.15); color:#34d399">${daysLeft} дн.</span>`;
+        }
+      }
+
+      const badgeClass = d.bank === 'Альфа-Банк' ? 'b-alfa' : (d.bank === 'Т-Банк' ? 'b-tbank' : 'b-sber');
+
+      return `
+        <tr class="${rowClass}">
+          <td><span class="badge ${badgeClass}">${d.bank}</span></td>
+          <td>${d.name || '—'}</td>
+          <td class="num">${d.rate ? d.rate + '%' : '—'}</td>
+          <td class="num">${fmt(d.amount)}</td>
+          <td>${d.endDate ? formatDisplayDate(d.endDate) : '—'}</td>
+          <td style="text-align:right;">${statusHtml} <button class="btn btn-sm btn-outline" onclick="deleteDeposit(${d.id})" title="Удалить">✕</button></td>
+        </tr>
+      `;
+    }).join('');
+
+    if (alertEl) {
+      if (nearEnd.length > 0) {
+        alertEl.style.display = 'block';
+        alertEl.innerHTML = `⏰ <strong>Скоро закрытие:</strong> подготовь перевод!<br>• ${nearEnd.join('<br>• ')}<br><em>Для промоставок «новые деньги» дай деньгам «отлежаться» 60–90 дней в другом банке.</em>`;
+      } else {
+        alertEl.style.display = 'none';
+      }
+    }
+  }
+
+  function updateMiles() {
+    state.s7Miles = Math.max(0, parseFloat(document.getElementById('s7Miles').value) || 0);
+    state.s7MilesGoal = Math.max(0, parseFloat(document.getElementById('s7Goal').value) || 30000);
+    saveState();
+    renderMiles();
+  }
+
+  function renderMiles() {
+    const miles = state.s7Miles || 0;
+    const goal = state.s7MilesGoal || 30000;
+    const pct = goal > 0 ? Math.min(100, (miles / goal) * 100) : 0;
+
+    const input = document.getElementById('s7Miles');
+    const goalInput = document.getElementById('s7Goal');
+    const bar = document.getElementById('s7Bar');
+    const txt = document.getElementById('s7Text');
+
+    if (input && document.activeElement !== input) input.value = miles;
+    if (goalInput && document.activeElement !== goalInput) goalInput.value = goal;
+    if (bar) bar.style.width = pct + '%';
+    if (txt) {
+      if (pct >= 100) {
+        txt.innerHTML = `<strong style="color:var(--green)">✈ ${miles.toLocaleString('ru-RU')} из ${goal.toLocaleString('ru-RU')} миль — билет уже «оплачен» тратами!</strong>`;
+      } else {
+        txt.textContent = `${miles.toLocaleString('ru-RU')} из ${goal.toLocaleString('ru-RU')} миль (${pct.toFixed(1)}%)`;
+        txt.style.color = 'var(--muted)';
+      }
+    }
+  }
+
+  function populateTaxYears() {
+    const sel = document.getElementById('taxYearSelect');
+    if (!sel) return;
+    const current = new Date().getFullYear();
+    const years = [];
+    (state.logs || []).forEach(l => {
+      if (l.isoDate) years.push(parseInt(l.isoDate.slice(0, 4), 10));
+    });
+    for (let i = 0; i < 3; i++) years.push(current - i);
+    years.push(current + 1);
+
+    const uniq = [...new Set(years.filter(y => !isNaN(y)))].sort((a, b) => b - a);
+    sel.innerHTML = uniq.map(y => `<option value="${y}">${y}</option>`).join('');
+    sel.value = state.taxYear || current;
+  }
+
+  function saveTaxCbRate() {
+    state.taxCbRate = parseFloat(document.getElementById('taxCbRate').value) || 16;
+    saveState();
+    renderTax();
+  }
+
+  function renderTax() {
+    const sel = document.getElementById('taxYearSelect');
+    const cbRateInput = document.getElementById('taxCbRate');
+    if (!sel || !cbRateInput) return;
+
+    if (document.activeElement !== cbRateInput) {
+      cbRateInput.value = state.taxCbRate || 16;
+    }
+
+    const year = parseInt(sel.value, 10) || new Date().getFullYear();
+    state.taxYear = year;
+
+    const cbRate = parseFloat(cbRateInput.value) || state.taxCbRate || 16;
+    const limit = Math.round(1000000 * (cbRate / 100));
+
+    let yearInterest = 0;
+    (state.logs || []).forEach(l => {
+      if (l.type === 'Проценты' && l.isoDate && parseInt(l.isoDate.slice(0, 4), 10) === year) {
+        yearInterest += Math.abs(l.amount);
+      }
+    });
+
+    const remain = Math.max(0, limit - yearInterest);
+    const excess = Math.max(0, yearInterest - limit);
+    const taxDue = excess * 0.13;
+
+    document.getElementById('taxInterest').textContent = fmtExact(yearInterest);
+    document.getElementById('taxLimit').textContent = fmt(limit);
+    document.getElementById('taxRemain').textContent = fmt(remain);
+    document.getElementById('taxExcess').textContent = fmt(excess);
+
+    const dueEl = document.getElementById('taxDue');
+    if (taxDue > 0) {
+      dueEl.textContent = fmt(taxDue);
+      dueEl.style.color = 'var(--red)';
+    } else {
+      dueEl.textContent = 'Налог не начисляется';
+      dueEl.style.color = 'var(--green)';
+    }
+
+    saveState();
+  }
+
+  function renderCharts() {
+    const currentTotal = state.alfa + state.tbank + state.sber;
+
+    const banks = [
+      { name: 'Альфа-Банк', val: state.alfa, color: '#ef4444' },
+      { name: 'Т-Банк', val: state.tbank, color: '#f59e0b' },
+      { name: 'Сбербанк', val: state.sber, color: '#10b981' }
+    ];
+    const maxBank = Math.max(...banks.map(b => b.val), 1000);
+    let bankSvg = `<svg viewBox="0 0 400 160">`;
+    banks.forEach((b, i) => {
+      const y = 15 + i * 48;
+      const w = Math.max(4, (b.val / maxBank) * 230);
+      bankSvg += `
+        <text x="0" y="${y + 16}" fill="#e2e8f0" font-size="13" font-weight="600">${b.name}</text>
+        <rect x="105" y="${y}" width="230" height="24" rx="6" fill="#0d1118" />
+        <rect x="105" y="${y}" width="${w}" height="24" rx="6" fill="${b.color}" />
+        <text x="342" y="${y + 16}" fill="#fff" font-size="12" font-weight="600">${Math.round(b.val).toLocaleString('ru-RU')} ₽</text>
+      `;
+    });
+    bankSvg += `</svg>`;
+    document.getElementById('bankBarChart').innerHTML = bankSvg;
+
+    const flatRub = state.flatByn * state.rate;
+    const parts = [
+      { name: 'Квартира', val: flatRub, color: '#3b82f6' },
+      { name: 'Авто в РБ', val: state.carRub, color: '#8b5cf6' },
+      { name: 'Ремонт/сетап', val: state.repairRub, color: '#f59e0b' },
+      { name: 'Переезд/резерв', val: state.moveRub, color: '#10b981' }
+    ];
+    const maxPart = Math.max(...parts.map(p => p.val), 1);
+    let partSvg = `<svg viewBox="0 0 400 185">`;
+    parts.forEach((p, i) => {
+      const y = 10 + i * 44;
+      const w = Math.max(4, (p.val / maxPart) * 210);
+      partSvg += `
+        <text x="0" y="${y + 16}" fill="#e2e8f0" font-size="12" font-weight="600">${p.name}</text>
+        <rect x="115" y="${y}" width="210" height="22" rx="6" fill="#0d1118" />
+        <rect x="115" y="${y}" width="${w}" height="22" rx="6" fill="${p.color}" />
+        <text x="332" y="${y + 16}" fill="#fff" font-size="11" font-weight="600">${(p.val / 1000000).toFixed(2)} млн</text>
+      `;
+    });
+    partSvg += `</svg>`;
+    document.getElementById('budgetBarChart').innerHTML = partSvg;
+
+    const milestones = [
+      { date: '2026-11-23', label: '23 ноя', plan: 2861.26 },
+      { date: '2026-12-01', label: '1 дек', plan: 6870.04 },
+      { date: '2026-12-15', label: '15 дек', plan: 16870.00 },
+      { date: '2027-01-01', label: '1 янв (НГ)', plan: 40035.04 },
+      { date: '2027-01-15', label: '15 янв', plan: 44035.04 },
+      { date: '2027-01-31', label: '31 янв', plan: 49420.04 },
+      { date: '2027-02-01', label: '1 фев (Вклад)', plan: 50420.04 }
+    ];
+
+    const sortedLogs = [...state.logs].sort((a, b) => (a.isoDate || '').localeCompare(b.isoDate || ''));
+    const latestLogDate = sortedLogs.length > 0 ? (sortedLogs[sortedLogs.length - 1].isoDate || '2026-11-23') : '2026-11-23';
+
+    const factPoints = [];
+    milestones.forEach((m, idx) => {
+      if (idx === 0 || m.date <= latestLogDate) {
+        let sumAtDate = 0;
+        sortedLogs.forEach(l => {
+          if ((l.isoDate || '2026-11-23') <= m.date) sumAtDate += l.amount;
+        });
+        if (idx === 0 && latestLogDate <= '2026-11-23') sumAtDate = currentTotal;
+        factPoints.push({ idx, val: Math.max(0, sumAtDate), label: m.label, plan: m.plan });
+      }
+    });
+
+    const lastFact = factPoints[factPoints.length - 1];
+    const diffPlan = currentTotal - lastFact.plan;
+    const badgeEl = document.getElementById('paceBadge');
+    if (diffPlan > 10) {
+      badgeEl.textContent = `Опережение плана: +${Math.round(diffPlan).toLocaleString('ru-RU')} ₽`;
+      badgeEl.style.background = 'rgba(16,185,129,0.15)';
+      badgeEl.style.color = 'var(--green)';
+    } else if (diffPlan < -10) {
+      badgeEl.textContent = `Отставание от плана: ${Math.round(diffPlan).toLocaleString('ru-RU')} ₽`;
+      badgeEl.style.background = 'rgba(239,68,68,0.15)';
+      badgeEl.style.color = 'var(--red)';
+    } else {
+      badgeEl.textContent = 'Идёшь ровно по плану';
+      badgeEl.style.background = 'rgba(59,130,246,0.15)';
+      badgeEl.style.color = 'var(--accent)';
+    }
+
+    const W1 = 800, H1 = 230, pL1 = 65, pR1 = 35, pT1 = 25, pB1 = 35;
+    const plW1 = W1 - pL1 - pR1, plH1 = H1 - pT1 - pB1;
+    const maxY1 = Math.max(55000, currentTotal * 1.15);
+
+    let nearSvg = `<svg viewBox="0 0 ${W1} ${H1}">`;
+    [0, 15000, 30000, 45000, 55000].forEach(v => {
+      if (v > maxY1) return;
+      const y = pT1 + plH1 - (v / maxY1) * plH1;
+      nearSvg += `<line x1="${pL1}" y1="${y}" x2="${W1 - pR1}" y2="${y}" stroke="#252d3d" stroke-dasharray="4" />`;
+      nearSvg += `<text x="${pL1 - 8}" y="${y + 4}" fill="#8a94a6" font-size="11" text-anchor="end">${(v / 1000).toFixed(0)} тыс.</text>`;
+    });
+
+    const planCoords = milestones.map((m, i) => {
+      const x = pL1 + (i / (milestones.length - 1)) * plW1;
+      const y = pT1 + plH1 - (m.plan / maxY1) * plH1;
+      return `${x},${y}`;
+    }).join(' ');
+    nearSvg += `<polyline fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,4" points="${planCoords}" />`;
+
+    milestones.forEach((m, i) => {
+      const x = pL1 + (i / (milestones.length - 1)) * plW1;
+      const y = pT1 + plH1 - (m.plan / maxY1) * plH1;
+      nearSvg += `<circle cx="${x}" cy="${y}" r="3.5" fill="#3b82f6" />`;
+      nearSvg += `<text x="${x}" y="${H1 - 10}" fill="#8a94a6" font-size="11" text-anchor="middle">${m.label}</text>`;
+    });
+
+    if (factPoints.length > 1) {
+      const factCoords = factPoints.map(fp => {
+        const x = pL1 + (fp.idx / (milestones.length - 1)) * plW1;
+        const y = pT1 + plH1 - (fp.val / maxY1) * plH1;
+        return `${x},${y}`;
+      }).join(' ');
+      nearSvg += `<polyline fill="none" stroke="#f59e0b" stroke-width="4" points="${factCoords}" />`;
+    }
+
+    factPoints.forEach((fp, i) => {
+      const x = pL1 + (fp.idx / (milestones.length - 1)) * plW1;
+      const valToShow = (i === factPoints.length - 1) ? currentTotal : fp.val;
+      const y = pT1 + plH1 - (valToShow / maxY1) * plH1;
+      nearSvg += `<circle cx="${x}" cy="${y}" r="5.5" fill="#f59e0b" stroke="#0b0e14" stroke-width="2" />`;
+      nearSvg += `<text x="${x}" y="${y - 11}" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">${Math.round(valToShow).toLocaleString('ru-RU')} ₽</text>`;
+    });
+
+    nearSvg += `</svg>`;
+    document.getElementById('nearTermChart').innerHTML = nearSvg;
+
+    const pointsInfl = [
+      { label: '2026', val: 0.003 },
+      { label: '2027', val: 0.28 },
+      { label: '2028 (выпуск)', val: 0.45 },
+      { label: '2029', val: 1.89 },
+      { label: '2030', val: 6.20 },
+      { label: '2031', val: 11.80 },
+      { label: '2032 (27 лет)', val: 18.00 }
+    ];
+    const pointsBase = [0.003, 0.28, 0.45, 1.50, 4.50, 8.20, 12.00];
+    const W = 800, H = 230, padL = 55, padR = 30, padT = 20, padB = 35;
+    const plotW = W - padL - padR, plotH = H - padT - padB;
+    const maxY = Math.max(18, currentTotal / 1000000);
+
+    let lineSvg = `<svg viewBox="0 0 ${W} ${H}">`;
+    [0, 4.5, 9, 13.5, 18].forEach(v => {
+      const y = padT + plotH - (v / maxY) * plotH;
+      lineSvg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#252d3d" stroke-dasharray="4" />`;
+      lineSvg += `<text x="${padL - 8}" y="${y + 4}" fill="#8a94a6" font-size="11" text-anchor="end">${v} млн</text>`;
+    });
+
+    const getCoords = (arr) => arr.map((v, i) => {
+      const x = padL + (i / (arr.length - 1)) * plotW;
+      const y = padT + plotH - (v / maxY) * plotH;
+      return `${x},${y}`;
+    }).join(' ');
+
+    lineSvg += `<polyline fill="none" stroke="#3b82f6" stroke-width="3" points="${getCoords(pointsBase)}" />`;
+    lineSvg += `<polyline fill="none" stroke="#10b981" stroke-width="3.5" points="${getCoords(pointsInfl.map(p => p.val))}" />`;
+
+    pointsInfl.forEach((p, i) => {
+      const x = padL + (i / (pointsInfl.length - 1)) * plotW;
+      const y = padT + plotH - (p.val / maxY) * plotH;
+      lineSvg += `<circle cx="${x}" cy="${y}" r="4.5" fill="#10b981" stroke="#0b0e14" stroke-width="2" />`;
+      lineSvg += `<text x="${x}" y="${H - 10}" fill="#8a94a6" font-size="11" text-anchor="middle">${p.label}</text>`;
+      if (i > 1) {
+        lineSvg += `<text x="${x}" y="${y - 10}" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">${p.val}м</text>`;
+      }
+    });
+
+    const curYear = new Date().getFullYear();
+    const yearIdx = Math.max(0, Math.min(6, curYear - 2026));
+    const curX = padL + (yearIdx / 6) * plotW;
+    const curMln = currentTotal / 1000000;
+    const curY = padT + plotH - (curMln / maxY) * plotH;
+    lineSvg += `<circle cx="${curX}" cy="${curY}" r="6.5" fill="#f59e0b" stroke="#fff" stroke-width="2" />`;
+    lineSvg += `<text x="${curX + 10}" y="${curY - 8}" fill="#fbbf24" font-size="12" font-weight="700">Факт: ${curMln.toFixed(3)} млн</text>`;
+
+    lineSvg += `</svg>`;
+    document.getElementById('growthLineChart').innerHTML = lineSvg;
+  }
+
+  function addManualLog() {
+    const bank = document.getElementById('logBank').value;
+    const type = document.getElementById('logType').value;
+    const amount = parseFloat(document.getElementById('logAmount').value);
+    const isoDate = document.getElementById('logDateInput').value || getTodayISO();
+    const note = document.getElementById('logNote').value.trim() || type;
+
+    if (!amount || amount <= 0) return alert('Введите сумму больше нуля');
+
+    const mapKey = { 'Альфа-Банк': 'alfa', 'Т-Банк': 'tbank', 'Сбербанк': 'sber' };
+    const key = mapKey[bank];
+    const delta = type === 'Снятие' ? -amount : amount;
+
+    state[key] = Math.max(0, +(state[key] + delta).toFixed(2));
+    document.getElementById(key).value = state[key];
+
+    state.logs.unshift({
+      id: Date.now(),
+      isoDate,
+      date: formatDisplayDate(isoDate),
+      bank,
+      type,
+      amount: delta,
+      note
+    });
+
+    document.getElementById('logAmount').value = '';
+    document.getElementById('logNote').value = '';
+    updateAll();
+    renderReport();
+    populateTaxYears();
+    renderTax();
+  }
+
+  function deleteLog(id) {
+    state.logs = state.logs.filter(item => item.id !== id);
+    saveState();
+    renderReport();
+    renderTax();
+  }
+
+  function renderReport() {
+    const tbody = document.getElementById('logTableBody');
+    let deposits = 0, interest = 0;
+
+    tbody.innerHTML = state.logs.map(item => {
+      if (item.type === 'Пополнение') deposits += item.amount;
+      if (item.type === 'Проценты') interest += item.amount;
+
+      const badgeClass = item.bank === 'Альфа-Банк' ? 'b-alfa' : (item.bank === 'Т-Банк' ? 'b-tbank' : 'b-sber');
+      const sign = item.amount >= 0 ? '+' : '';
+      const color = item.amount >= 0 ? 'var(--green)' : 'var(--red)';
+
+      return `
+        <tr>
+          <td style="color:var(--muted)">${item.date}</td>
+          <td><span class="badge ${badgeClass}">${item.bank}</span></td>
+          <td>${item.type}</td>
+          <td>${item.note}</td>
+          <td class="num" style="color:${color}">${sign}${fmtExact(item.amount)}</td>
+          <td style="text-align:right"><button class="btn btn-sm btn-outline" onclick="deleteLog(${item.id})">✕</button></td>
+        </tr>
+      `;
+    }).join('');
+
+    document.getElementById('repCount').textContent = state.logs.length;
+    document.getElementById('repDeposits').textContent = fmtExact(deposits);
+    document.getElementById('repInterest').textContent = fmtExact(interest);
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `minsk-plan-${getTodayISO()}.json`;
+    a.click();
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const imported = JSON.parse(e.target.result);
+        state = { ...JSON.parse(JSON.stringify(defaultState)), ...imported };
+        initInputs();
+        updateAll();
+        renderReport();
+        renderDepositList();
+        renderMiles();
+        populateTaxYears();
+        renderTax();
+        alert('Данные успешно загружены!');
+      } catch (err) {
+        alert('Ошибка чтения файла JSON');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function resetAll() {
+    if (!confirm('Сбросить все балансы, вклады и журнал к стартовым значениям?')) return;
+    state = JSON.parse(JSON.stringify(defaultState));
+    initInputs();
+    updateAll();
+    renderReport();
+    renderDepositList();
+    renderMiles();
+    populateTaxYears();
+    renderTax();
+  }
+
+  function initInputs() {
+    ['alfa', 'tbank', 'sber', 'goal', 'rate', 'flatByn', 'carRub', 'repairRub', 'moveRub'].forEach(id => {
+      document.getElementById(id).value = state[id];
+    });
+    document.getElementById('logDateInput').value = getTodayISO();
+    document.getElementById('s7Miles').value = state.s7Miles || 0;
+    document.getElementById('s7Goal').value = state.s7MilesGoal || 30000;
+    document.getElementById('taxCbRate').value = state.taxCbRate || 16;
+
+    const depEnd = document.getElementById('depEnd');
+    if (depEnd) {
+      const d = new Date();
+      d.setMonth(d.getMonth() + 4);
+      depEnd.value = d.toISOString().split('T')[0];
+    }
+  }
+
+  initInputs();
+  updateAll();
+  renderDepositList();
+  renderMiles();
+  populateTaxYears();
+  renderTax();
+  fetchRates();
+
+  // Регистрация Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
