@@ -86,3 +86,5 @@ self.addEventListener('fetch', (e) => {
   // 4) Всё остальное — сеть, потом кэш
   e.respondWith(fetch(req).catch(() => caches.match(req)));
 });
+
+const CACHE_VERSION = 'v2'; // было v1 → стало v2
