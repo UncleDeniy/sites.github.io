@@ -1284,6 +1284,27 @@
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     });
   }
+
+    // Регистрация Service Worker с автообновлением
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+        .then(reg => {
+          // Проверяем обновления при каждом открытии приложения
+          reg.update();
+        })
+        .catch(() => {});
+    });
+
+    // Если Service Worker обновился — перезагружаем страницу
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        refreshing = true;
+        window.location.reload();
+      }
+    });
+  }
 </script>
 </body>
 </html>
