@@ -163,6 +163,29 @@
   .status-pill { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
   .dep-row-warn { background: rgba(245,158,11,0.06); }
   .dep-row-expired { opacity: 0.55; }
+
+  /* Стили для конвертера валют */
+  .converter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 600px) {
+    .converter-grid { grid-template-columns: 1fr; }
+  }
+  .conv-result {
+    background: #0d1118;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: 800;
+    text-align: center;
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
+    transition: all 0.2s;
+  }
 </style>
 </head>
 <body>
@@ -245,6 +268,38 @@
           <strong style="color:#fff" id="leftToSave">0 ₽</strong>
         </div>
       </div>
+    </div>
+
+    <!-- НОВЫЙ БЛОК: КОНВЕРТЕР ВАЛЮТ -->
+    <div class="card">
+      <h2>Конвертер валют (по данным ЦБ РФ)</h2>
+      <div class="converter-grid">
+        <div class="field" style="margin-bottom:0;">
+          <label>Сумма</label>
+          <input type="number" id="convAmount" value="1000" oninput="updateConverter()">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Из валюты</label>
+          <select id="convFrom" onchange="updateConverter()">
+            <option value="RUB">RUB - Российский рубль</option>
+            <option value="USD">USD - Доллар США</option>
+            <option value="BYN">BYN - Белорусский рубль</option>
+            <option value="EUR">EUR - Евро</option>
+            <option value="CNY">CNY - Китайский юань</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>В валюту</label>
+          <select id="convTo" onchange="updateConverter()">
+            <option value="BYN">BYN - Белорусский рубль</option>
+            <option value="USD">USD - Доллар США</option>
+            <option value="RUB">RUB - Российский рубль</option>
+            <option value="EUR">EUR - Евро</option>
+            <option value="CNY">CNY - Китайский юань</option>
+          </select>
+        </div>
+      </div>
+      <div class="conv-result" id="convResult">0.00 BYN</div>
     </div>
 
     <div class="card">
@@ -549,6 +604,8 @@
     s7MilesGoal: 30000,
     taxCbRate: 16,
     taxYear: new Date().getFullYear(),
+    // Добавлены базовые курсы для конвертера (на случай первого офлайн-запуска)
+    rates: { RUB: 1, USD: 90.00, BYN: 27.42, EUR: 98.00, CNY: 12.50 },
     logs: [
       { id: 1, isoDate: '2026-11-23', date: '23.11.2026', bank: 'Альфа-Банк', type: 'Пополнение', amount: 2861.26, note: 'Стартовый остаток на счёте «Стань миллионером» (10%)' }
     ]
@@ -589,7 +646,7 @@
     btn.classList.add('active');
     if (tabId === 'charts') renderCharts();
     if (tabId === 'report') { renderReport(); renderTax(); }
-    if (tabId === 'dash') { renderDepositList(); renderMiles(); }
+    if (tabId === 'dash') { renderDepositList(); renderMiles(); updateConverter(); }
   }
 
   async function fetchRates() {
@@ -604,24 +661,58 @@
       if (!res.ok) throw new Error('Network error');
       const data = await res.json();
 
-      const byn = +(data.Valute.BYN.Value / data.Valute.BYN.Nominal).toFixed(2);
-      const usd = +(data.Valute.USD.Value / data.Valute.USD.Nominal).toFixed(2);
-      const nowStr = new Date().toLocaleDateString('ru-RU');
+      // Парсим все нужные валюты
+      const newRates = { RUB: 1 };
+      ['USD', 'BYN', 'EUR', 'CNY'].forEach(c => {
+        if (data.Valute[c]) {
+          newRates[c] = +(data.Valute[c].Value / data.Valute[c].Nominal).toFixed(4);
+        }
+      });
 
-      state.rate = byn;
-      state.usdRate = usd;
+      state.rates = newRates;
+      state.rate = state.rates.BYN;
+      state.usdRate = state.rates.USD;
+      
+      const nowStr = new Date().toLocaleDateString('ru-RU');
       state.rateDate = nowStr;
-      document.getElementById('rate').value = byn;
+      document.getElementById('rate').value = state.rate;
 
       dotEl.classList.remove('offline');
       statusEl.textContent = `Онлайн (ЦБ РФ на ${nowStr})`;
       updateAll();
+      updateConverter();
     } catch (e) {
       dotEl.classList.add('offline');
       statusEl.textContent = `Офлайн • сохранённый курс от ${state.rateDate}`;
       document.getElementById('headerByn').textContent = state.rate.toFixed(2) + ' ₽';
       document.getElementById('headerUsd').textContent = state.usdRate.toFixed(2) + ' ₽';
+      updateConverter(); // Пересчитываем по старым курсам
     }
+  }
+
+  // Логика конвертера
+  function updateConverter() {
+    const amountInput = document.getElementById('convAmount');
+    const fromSel = document.getElementById('convFrom');
+    const toSel = document.getElementById('convTo');
+    const resultEl = document.getElementById('convResult');
+    
+    if(!amountInput || !fromSel || !toSel || !resultEl) return;
+
+    const amount = parseFloat(amountInput.value) || 0;
+    const from = fromSel.value;
+    const to = toSel.value;
+
+    // Берем курсы из стейта (актуальные или сохраненные офлайн)
+    const rates = state.rates || { RUB: 1, USD: 90, BYN: 27.42, EUR: 98, CNY: 12.5 };
+    const rateFrom = rates[from] || 1;
+    const rateTo = rates[to] || 1;
+
+    // Формула: (Сумма * Курс_От) / Курс_К
+    // Курсы ЦБ даны за 1 единицу валюты в рублях (для RUB = 1)
+    const result = (amount * rateFrom) / rateTo;
+
+    resultEl.textContent = result.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + to;
   }
 
   function quickAdd(bankKey, amount, noteText) {
@@ -1233,6 +1324,7 @@
         renderMiles();
         populateTaxYears();
         renderTax();
+        updateConverter();
         alert('Данные успешно загружены!');
       } catch (err) {
         alert('Ошибка чтения файла JSON');
@@ -1251,6 +1343,7 @@
     renderMiles();
     populateTaxYears();
     renderTax();
+    updateConverter();
   }
 
   function initInputs() {
@@ -1276,26 +1369,16 @@
   renderMiles();
   populateTaxYears();
   renderTax();
+  updateConverter();
   fetchRates();
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    });
-  }
-
-    // Регистрация Service Worker с автообновлением
+  // Регистрация Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
-        .then(reg => {
-          // Проверяем обновления при каждом открытии приложения
-          reg.update();
-        })
+        .then(reg => { reg.update(); })
         .catch(() => {});
     });
-
-    // Если Service Worker обновился — перезагружаем страницу
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (!refreshing) {
