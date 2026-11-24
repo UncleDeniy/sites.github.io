@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const ASSETS_CACHE  = 'minsk-assets-' + CACHE_VERSION;
 const RUNTIME_CACHE = 'minsk-runtime-' + CACHE_VERSION;
 
