@@ -32,7 +32,7 @@
   :root {
     --bg: #0b0e14;
     --card: #141923;
-    --card-hover: #1a202c;
+    --card-hover: #1a2230;
     --border: #252d3d;
     --text: #e2e8f0;
     --muted: #8a94a6;
@@ -41,10 +41,20 @@
     --yellow: #f59e0b;
     --purple: #8b5cf6;
     --red: #ef4444;
+    --shadow: 0 4px 24px rgba(0,0,0,0.25);
+  }
+  [data-theme="light"] {
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --card-hover: #f8fafc;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
   }
   * {
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
   html, body {
@@ -52,140 +62,172 @@
     color: var(--text);
     margin: 0;
     line-height: 1.5;
+    transition: background 0.3s, color 0.3s;
   }
   body {
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: calc(16px + env(safe-area-inset-top));
-    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: calc(12px + env(safe-area-inset-top));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
     min-height: 100vh;
     min-height: -webkit-fill-available;
   }
   .container { max-width: 1040px; margin: 0 auto; }
 
-  .hub-nav { display: flex; align-items: center; margin-bottom: 14px; }
+  .hub-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .back-btn {
     display: inline-flex; align-items: center; gap: 6px;
     background: var(--card); border: 1px solid var(--border); color: var(--muted);
-    text-decoration: none; padding: 8px 14px; border-radius: 10px;
+    text-decoration: none; padding: 8px 14px; border-radius: 12px;
     font-size: 13px; font-weight: 600; transition: all 0.2s;
   }
-  .back-btn:hover { color: #fff; border-color: #fff; }
+  .back-btn:hover { color: var(--text); border-color: var(--accent); }
+  .theme-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    width: 40px; height: 40px; border-radius: 12px; cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .theme-btn:hover { color: var(--text); border-color: var(--accent); }
 
   .header {
     display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-    gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
   }
-  .header h1 { font-size: 22px; margin: 0; color: #fff; }
+  .header h1 { font-size: 20px; margin: 0; color: var(--text); font-weight: 800; letter-spacing: -0.3px; }
   .rate-box {
-    background: var(--card); border: 1px solid var(--border); padding: 8px 14px;
-    border-radius: 10px; font-size: 13px; display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 1px solid var(--border); padding: 8px 12px;
+    border-radius: 12px; font-size: 13px; display: flex; align-items: center; gap: 10px;
+    box-shadow: var(--shadow);
   }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
   .dot.offline { background: var(--yellow); }
 
   .tabs {
-    display: flex; gap: 8px; margin-bottom: 20px;
+    display: flex; gap: 8px; margin-bottom: 18px;
     border-bottom: 1px solid var(--border); padding-bottom: 12px; flex-wrap: wrap;
   }
   .tab-btn {
     background: var(--card); border: 1px solid var(--border); color: var(--muted);
-    padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px;
+    padding: 10px 16px; border-radius: 12px; cursor: pointer; font-size: 14px;
     font-weight: 600; transition: all 0.2s;
   }
-  .tab-btn:hover { color: #fff; background: var(--card-hover); }
   .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+  .tab-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 16px; }
   .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-    padding: 20px; margin-bottom: 16px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow); transition: transform 0.15s;
   }
+  .card:hover { transform: translateY(-1px); }
   .card h2 {
-    font-size: 16px; margin: 0 0 16px; color: #fff;
+    font-size: 16px; margin: 0 0 14px; color: var(--text); font-weight: 700;
     display: flex; justify-content: space-between; align-items: center;
   }
 
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 5px; font-weight: 500; }
   .input-row { display: flex; gap: 8px; }
-  input, select {
-    width: 100%; background: #0d1118; border: 1px solid var(--border); color: #fff;
-    padding: 9px 12px; border-radius: 8px; font-size: 16px; font-weight: 600;
-    -webkit-appearance: none; appearance: none;
+  input, select, textarea {
+    width: 100%; background: color-mix(in srgb, var(--bg) 70%, var(--card)); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 12px; border-radius: 10px; font-size: 16px; font-weight: 600;
+    -webkit-appearance: none; appearance: none; transition: border-color 0.15s;
   }
   input:focus, select:focus { outline: none; border-color: var(--accent); }
   .btn {
-    background: var(--accent); color: #fff; border: none; padding: 9px 14px;
-    border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;
-    white-space: nowrap; -webkit-tap-highlight-color: transparent;
+    background: var(--accent); color: #fff; border: none; padding: 10px 14px;
+    border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600;
+    white-space: nowrap; transition: opacity 0.15s, transform 0.1s;
   }
-  .btn:hover { opacity: 0.9; }
-  .btn-sm { padding: 6px 10px; font-size: 12px; }
+  .btn:active { transform: scale(0.97); }
+  .btn:hover { opacity: 0.92; }
+  .btn-sm { padding: 7px 11px; font-size: 12px; }
   .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-  .btn-outline:hover { color: #fff; border-color: #fff; }
+  .btn-outline:hover { color: var(--text); border-color: var(--accent); }
   .btn-green { background: var(--green); color: #052e16; }
+  .btn-danger { background: transparent; border: 1px solid rgba(239,68,68,0.4); color: var(--red); }
 
-  .stat-big { font-size: 28px; font-weight: 800; color: var(--green); margin: 4px 0; font-variant-numeric: tabular-nums; }
+  .stat-big { font-size: 32px; font-weight: 800; color: var(--green); margin: 2px 0 6px; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
   .stat-sub { font-size: 13px; color: var(--muted); }
-  .progress-wrap { background: #0d1118; border-radius: 99px; height: 14px; overflow: hidden; margin: 14px 0; border: 1px solid var(--border); }
-  .progress-bar { background: linear-gradient(90deg, var(--accent), var(--green)); height: 100%; width: 0%; transition: width 0.4s ease; }
+  .progress-wrap { background: color-mix(in srgb, var(--bg) 60%, transparent); border-radius: 99px; height: 12px; overflow: hidden; margin: 12px 0; border: 1px solid var(--border); }
+  .progress-bar { background: linear-gradient(90deg, var(--accent), var(--green)); height: 100%; width: 0%; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
 
-  .asv-mini { height: 4px; background: #0d1118; border-radius: 99px; overflow: hidden; margin-top: 8px; }
-  .asv-mini-bar { height: 100%; width: 0%; background: var(--green); transition: width 0.4s ease, background 0.3s ease; }
-  .asv-mini-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .circle-progress { display: flex; align-items: center; gap: 18px; margin: 8px 0 12px; }
+  .circle-svg { width: 92px; height: 92px; flex-shrink: 0; }
+  .circle-text { font-size: 22px; font-weight: 800; color: var(--green); }
+
+  .asv-mini { height: 5px; background: color-mix(in srgb, var(--bg) 50%, transparent); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+  .asv-mini-bar { height: 100%; width: 0%; background: var(--green); transition: width 0.4s ease, background 0.3s; }
+  .asv-mini-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 3px; }
 
   .alert {
-    padding: 12px 14px; border-radius: 10px; font-size: 13px;
-    margin-bottom: 14px; display: none;
+    padding: 12px 14px; border-radius: 12px; font-size: 13px;
+    margin-bottom: 12px; display: none; line-height: 1.45;
   }
-  .alert-yellow { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; }
-  .alert-red    { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.3);  color: #f87171; }
-  .alert-blue   { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #60a5fa; }
+  .alert-yellow { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.35); color: #fbbf24; }
+  .alert-red    { background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.35);  color: #f87171; }
+  .alert-blue   { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.35); color: #60a5fa; }
 
   .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
-  th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  th { color: var(--muted); font-weight: 500; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 480px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; }
   td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
-  .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 600; }
   .b-alfa  { background: rgba(239,68,68,0.15);  color: #f87171; }
   .b-tbank { background: rgba(245,158,11,0.15); color: #fbbf24; }
   .b-sber  { background: rgba(16,185,129,0.15); color: #34d399; }
 
-  .chart-container { width: 100%; overflow-x: auto; margin-top: 10px; }
+  .chart-container { width: 100%; overflow-x: auto; margin-top: 8px; }
   svg { width: 100%; height: auto; display: block; }
-  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 13px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12.5px; }
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-color { width: 12px; height: 12px; border-radius: 3px; }
   .status-pill { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
-  .dep-row-warn { background: rgba(245,158,11,0.06); }
+  .dep-row-warn { background: rgba(245,158,11,0.07); }
   .dep-row-expired { opacity: 0.55; }
 
-  /* Стили для конвертера валют */
   .converter-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 640px) {
     .converter-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 18px; }
   }
   .conv-result {
-    background: #0d1118;
+    background: color-mix(in srgb, var(--bg) 60%, var(--card));
     border: 1px solid var(--border);
-    padding: 16px;
-    border-radius: 10px;
-    font-size: 24px;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 26px;
     font-weight: 800;
     text-align: center;
     color: var(--green);
     font-variant-numeric: tabular-nums;
-    transition: all 0.2s;
   }
+
+  .budget-item { margin-bottom: 14px; }
+  .budget-item .top { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+  .budget-item .name { font-weight: 600; }
+  .budget-item .remain { color: var(--muted); font-size: 12px; }
+
+  #toast {
+    position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); left: 50%;
+    transform: translateX(-50%) translateY(100px); background: var(--card);
+    border: 1px solid var(--border); color: var(--text); padding: 12px 18px;
+    border-radius: 12px; font-size: 14px; font-weight: 500; box-shadow: var(--shadow);
+    opacity: 0; transition: all 0.3s; z-index: 9999; pointer-events: none; max-width: 90vw;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  .search-log { margin-bottom: 12px; }
 </style>
 </head>
 <body>
@@ -193,33 +235,34 @@
 
   <div class="hub-nav">
     <a href="../" class="back-btn">← В хаб</a>
+    <button class="theme-btn" id="themeToggle" title="Переключить тему">🌙</button>
   </div>
 
   <div class="header">
     <div>
-      <h1>Переезд: Владивосток → Минск (к 27 годам)</h1>
-      <div class="stat-sub">Личный финансовый план • Старт: ноябрь 2026</div>
+      <h1>Minsk 2032</h1>
+      <div class="stat-sub">Переезд Владивосток → Минск • к 27 годам</div>
     </div>
     <div class="rate-box">
       <span class="dot" id="rateDot"></span>
       <div>
-        <div>BYN: <strong id="headerByn" style="color:#fff">27.42 ₽</strong> • USD: <strong id="headerUsd" style="color:#fff">90.00 ₽</strong></div>
+        <div>BYN: <strong id="headerByn">27.42 ₽</strong> • USD: <strong id="headerUsd">90.00 ₽</strong></div>
         <div style="font-size:11px; color:var(--muted)" id="rateStatus">Загрузка курса...</div>
       </div>
-      <button class="btn btn-sm btn-outline" onclick="fetchRates()" title="Обновить курс по сети">↻</button>
+      <button class="btn btn-sm btn-outline" onclick="fetchRates()" title="Обновить курс">↻</button>
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('dash', this)">1. Счета и Симулятор</button>
-    <button class="tab-btn" onclick="switchTab('charts', this)">2. Графики и Прогноз</button>
-    <button class="tab-btn" onclick="switchTab('report', this)">3. Отчётность и Журнал</button>
+    <button class="tab-btn active" onclick="switchTab('dash', this)">Счета</button>
+    <button class="tab-btn" onclick="switchTab('charts', this)">Графики</button>
+    <button class="tab-btn" onclick="switchTab('report', this)">Журнал</button>
   </div>
 
   <div id="tab-dash" class="tab-content active">
     <div class="grid">
       <div class="card">
-        <h2>Мои счета сейчас (₽)</h2>
+        <h2>Мои счета</h2>
         <div class="field">
           <label>Альфа-Банк («Стань миллионером» 10%)</label>
           <div class="input-row">
@@ -228,74 +271,87 @@
             <button class="btn" onclick="quickAdd('alfa', 5000, 'Ежемесячный бонус (+5 000 ₽)')">+5т</button>
           </div>
           <div class="asv-mini"><div class="asv-mini-bar" id="asvMiniAlfa"></div></div>
-          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniAlfaText">0 / 1,4 млн ₽</span></div>
+          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniAlfaText">0 / 1,4 млн</span></div>
         </div>
         <div class="field">
-          <label>Т-Банк («СмартВклад» 14% / накопительный)</label>
+          <label>Т-Банк («СмартВклад» / накопительный)</label>
           <div class="input-row">
             <input type="number" step="0.01" id="tbank" oninput="manualBalanceChange('tbank')">
             <button class="btn btn-outline" onclick="quickAdd('tbank', 50000, 'Открытие вклада (+50 000 ₽)')">+50т</button>
           </div>
           <div class="asv-mini"><div class="asv-mini-bar" id="asvMiniTbank"></div></div>
-          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniTbankText">0 / 1,4 млн ₽</span></div>
+          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniTbankText">0 / 1,4 млн</span></div>
         </div>
         <div class="field">
-          <label>Сбербанк (резерв / вклады)</label>
+          <label>Сбербанк (резерв)</label>
           <div class="input-row">
             <input type="number" step="0.01" id="sber" oninput="manualBalanceChange('sber')">
             <button class="btn btn-outline" onclick="quickAdd('sber', 10000, 'Пополнение Сбер (+10 000 ₽)')">+10т</button>
           </div>
           <div class="asv-mini"><div class="asv-mini-bar" id="asvMiniSber"></div></div>
-          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniSberText">0 / 1,4 млн ₽</span></div>
+          <div class="asv-mini-label"><span>АСВ</span><span id="asvMiniSberText">0 / 1,4 млн</span></div>
         </div>
         <div id="asvWarning" class="alert alert-red"></div>
         <div id="currencyHint" class="alert alert-blue"></div>
       </div>
 
       <div class="card">
-        <h2>Прогресс до цели (2032 год)</h2>
-        <div class="stat-sub">Всего накоплено во всех банках:</div>
-        <div class="stat-big" id="totalSaved">0 ₽</div>
+        <h2>Прогресс до цели</h2>
+        <div class="circle-progress">
+          <svg class="circle-svg" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--border)" stroke-width="8"/>
+            <circle id="goalCircle" cx="50" cy="50" r="42" fill="none" stroke="var(--green)" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264"
+                    transform="rotate(-90 50 50)" style="transition: stroke-dashoffset 0.6s ease;"/>
+          </svg>
+          <div>
+            <div class="stat-sub">Накоплено</div>
+            <div class="stat-big" id="totalSaved" style="font-size:28px;">0 ₽</div>
+            <div class="stat-sub" id="progText">0% от цели</div>
+          </div>
+        </div>
         <div class="progress-wrap"><div class="progress-bar" id="progBar"></div></div>
-        <div class="stat-sub" id="progText">0% от цели</div>
-        <hr style="border:0; border-top:1px solid var(--border); margin: 16px 0;">
         <div class="field">
           <label>Целевая сумма с учётом инфляции (₽)</label>
           <input type="number" id="goal" oninput="updateAll()">
         </div>
         <div style="display:flex; justify-content:space-between; font-size:14px;">
-          <span class="stat-sub">Осталось накопить:</span>
-          <strong style="color:#fff" id="leftToSave">0 ₽</strong>
+          <span class="stat-sub">Осталось:</span>
+          <strong id="leftToSave">0 ₽</strong>
         </div>
       </div>
     </div>
 
-    <!-- НОВЫЙ БЛОК: КОНВЕРТЕР ВАЛЮТ -->
     <div class="card">
-      <h2>Конвертер валют (по данным ЦБ РФ)</h2>
+      <h2>Структура бюджета переезда</h2>
+      <div id="budgetCategories"></div>
+    </div>
+
+    <div class="card">
+      <h2>Конвертер валют (ЦБ РФ)</h2>
       <div class="converter-grid">
         <div class="field" style="margin-bottom:0;">
           <label>Сумма</label>
           <input type="number" id="convAmount" value="1000" oninput="updateConverter()">
         </div>
         <div class="field" style="margin-bottom:0;">
-          <label>Из валюты</label>
+          <label>Из</label>
           <select id="convFrom" onchange="updateConverter()">
-            <option value="RUB">RUB - Российский рубль</option>
-            <option value="USD">USD - Доллар США</option>
-            <option value="BYN">BYN - Белорусский рубль</option>
-            <option value="EUR">EUR - Евро</option>
-            <option value="CNY">CNY - Китайский юань</option>
+            <option value="RUB">RUB</option>
+            <option value="USD">USD</option>
+            <option value="BYN">BYN</option>
+            <option value="EUR">EUR</option>
+            <option value="CNY">CNY</option>
           </select>
         </div>
         <div class="field" style="margin-bottom:0;">
-          <label>В валюту</label>
+          <label>В</label>
           <select id="convTo" onchange="updateConverter()">
-            <option value="BYN">BYN - Белорусский рубль</option>
-            <option value="USD">USD - Доллар США</option>
-            <option value="RUB">RUB - Российский рубль</option>
-            <option value="EUR">EUR - Евро</option>
-            <option value="CNY">CNY - Китайский юань</option>
+            <option value="BYN">BYN</option>
+            <option value="USD">USD</option>
+            <option value="RUB">RUB</option>
+            <option value="EUR">EUR</option>
+            <option value="CNY">CNY</option>
           </select>
         </div>
       </div>
@@ -303,123 +359,75 @@
     </div>
 
     <div class="card">
-      <h2>Копилка миль S7 Airlines</h2>
-      <div class="stat-sub" style="margin-bottom:14px;">
-        Повседневные траты по карте Т-Банк S7 копят мили. Билет Владивосток → Минск с багажом ≈ 30 000 миль. Прогресс покажет, насколько билет уже «оплачен» твоими тратами.
-      </div>
+      <h2>Копилка миль S7</h2>
+      <div class="stat-sub" style="margin-bottom:12px;">Билет Владивосток → Минск ≈ 30 000 миль</div>
       <div class="grid" style="margin-bottom:0; gap:12px;">
         <div class="field" style="margin-bottom:0;">
-          <label>Текущий баланс миль</label>
+          <label>Текущие мили</label>
           <input type="number" id="s7Miles" min="0" step="1" onchange="updateMiles()">
         </div>
         <div class="field" style="margin-bottom:0;">
-          <label>Цель (миль на билет)</label>
+          <label>Цель</label>
           <input type="number" id="s7Goal" min="0" step="1" onchange="updateMiles()">
         </div>
       </div>
-      <div class="progress-wrap" style="margin-top:16px;">
+      <div class="progress-wrap" style="margin-top:14px;">
         <div class="progress-bar" id="s7Bar" style="background: linear-gradient(90deg, var(--yellow), var(--green))"></div>
       </div>
       <div class="stat-sub" id="s7Text">0 из 30 000 миль</div>
     </div>
 
     <div class="card">
-      <h2>Активные вклады и сроки</h2>
-      <div class="stat-sub" style="margin-bottom:14px;">
-        За 5 дней до окончания вклад подсвечивается жёлтым — «пора перекладывать». Для промоставок «новые деньги» в Сбере и Альфе деньги должны «отлежаться» в другом банке 60–90 дней — не переводи раньше!
-      </div>
+      <h2>Активные вклады</h2>
+      <div class="stat-sub" style="margin-bottom:12px;">За 5 дней до окончания — жёлтое предупреждение. Для промо «новые деньги» держи 60–90 дней в другом банке.</div>
       <div id="depositAlert" class="alert alert-yellow"></div>
-
-      <div class="grid" style="margin-bottom:14px; gap:10px;">
+      <div class="grid" style="margin-bottom:12px; gap:10px;">
         <div>
-          <div class="field" style="margin-bottom:8px;">
-            <label>Банк</label>
-            <select id="depBank">
-              <option value="Альфа-Банк">Альфа-Банк</option>
-              <option value="Т-Банк">Т-Банк</option>
-              <option value="Сбербанк">Сбербанк</option>
-            </select>
+          <div class="field" style="margin-bottom:8px;"><label>Банк</label>
+            <select id="depBank"><option>Альфа-Банк</option><option>Т-Банк</option><option>Сбербанк</option></select>
           </div>
-          <div class="field" style="margin-bottom:8px;">
-            <label>Название вклада</label>
+          <div class="field" style="margin-bottom:8px;"><label>Название</label>
             <input type="text" id="depName" placeholder="СмартВклад 14%">
           </div>
         </div>
         <div>
-          <div class="field" style="margin-bottom:8px;">
-            <label>Сумма (₽)</label>
+          <div class="field" style="margin-bottom:8px;"><label>Сумма (₽)</label>
             <input type="number" step="0.01" id="depAmount" placeholder="50000">
           </div>
-          <div class="field" style="margin-bottom:8px;">
-            <label>Ставка, %</label>
+          <div class="field" style="margin-bottom:8px;"><label>Ставка, %</label>
             <input type="number" step="0.1" id="depRate" placeholder="14">
           </div>
         </div>
         <div>
-          <div class="field" style="margin-bottom:8px;">
-            <label>Дата окончания</label>
+          <div class="field" style="margin-bottom:8px;"><label>Дата окончания</label>
             <input type="date" id="depEnd">
           </div>
         </div>
       </div>
       <button class="btn" onclick="addDeposit()">+ Добавить вклад</button>
-
-      <div class="table-wrap" style="margin-top:18px;">
+      <div class="table-wrap" style="margin-top:16px;">
         <table>
-          <thead>
-            <tr>
-              <th>Банк</th>
-              <th>Название</th>
-              <th style="text-align:right">Ставка</th>
-              <th style="text-align:right">Сумма</th>
-              <th>Окончание</th>
-              <th style="text-align:right">Статус</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Банк</th><th>Название</th><th style="text-align:right">Ставка</th><th style="text-align:right">Сумма</th><th>Окончание</th><th></th></tr></thead>
           <tbody id="depositTableBody"></tbody>
         </table>
       </div>
     </div>
 
     <div class="card">
-      <h2>Симулятор расходов в Минске (пересчёт по курсу BYN)</h2>
+      <h2>Симулятор расходов в Минске</h2>
       <div class="grid" style="margin-bottom:0;">
         <div>
-          <div class="field">
-            <label>Курс BYN к RUB (обновляется авто или вручную)</label>
-            <input type="number" step="0.01" id="rate" oninput="updateAll()">
-          </div>
-          <div class="field">
-            <label>Цена квартиры в Минске (BYN)</label>
-            <input type="number" id="flatByn" oninput="updateAll()">
-          </div>
-          <div class="field">
-            <label>Автомобиль в Минске (RUB, ориентир Geely Atlas)</label>
-            <input type="number" id="carRub" oninput="updateAll()">
-          </div>
+          <div class="field"><label>Курс BYN → RUB</label><input type="number" step="0.01" id="rate" oninput="updateAll()"></div>
+          <div class="field"><label>Квартира (BYN)</label><input type="number" id="flatByn" oninput="updateAll()"></div>
+          <div class="field"><label>Автомобиль (RUB)</label><input type="number" id="carRub" oninput="updateAll()"></div>
         </div>
         <div>
-          <div class="field">
-            <label>Электрика, косметика, лофт и мебель (RUB)</label>
-            <input type="number" id="repairRub" oninput="updateAll()">
-          </div>
-          <div class="field">
-            <label>Оформление, переезд и подушка безопасности (RUB)</label>
-            <input type="number" id="moveRub" oninput="updateAll()">
-          </div>
-          <div style="background:#0d1118; padding:14px; border-radius:10px; border:1px solid var(--border); margin-top:8px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-              <span class="stat-sub">Квартира в рублях:</span>
-              <strong style="color:#fff" id="flatRubOut">0 ₽</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-              <span class="stat-sub">Итого весь переезд (в ценах 2026):</span>
-              <strong style="color:var(--yellow)" id="totalCostOut">0 ₽</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span class="stat-sub">Остаток от базовых 12 млн ₽:</span>
-              <strong style="color:var(--green)" id="budgetLeftOut">0 ₽</strong>
-            </div>
+          <div class="field"><label>Электрика / сетап / мебель (RUB)</label><input type="number" id="repairRub" oninput="updateAll()"></div>
+          <div class="field"><label>Оформление, переезд, подушка (RUB)</label><input type="number" id="moveRub" oninput="updateAll()"></div>
+          <div style="background:color-mix(in srgb, var(--bg) 60%, var(--card)); padding:14px; border-radius:12px; border:1px solid var(--border); margin-top:8px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span class="stat-sub">Квартира в ₽:</span><strong id="flatRubOut">0 ₽</strong></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span class="stat-sub">Итого переезд (цены 2026):</span><strong style="color:var(--yellow)" id="totalCostOut">0 ₽</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span class="stat-sub">Остаток от 12 млн:</span><strong style="color:var(--green)" id="budgetLeftOut">0 ₽</strong></div>
           </div>
         </div>
       </div>
@@ -429,36 +437,34 @@
   <div id="tab-charts" class="tab-content">
     <div class="grid">
       <div class="card">
-        <h2>Распределение текущего капитала по банкам</h2>
+        <h2>Капитал по банкам</h2>
         <div class="chart-container" id="bankBarChart"></div>
       </div>
       <div class="card">
-        <h2>Структура бюджета переезда (12 млн ₽)</h2>
+        <h2>Структура бюджета</h2>
         <div class="chart-container" id="budgetBarChart"></div>
       </div>
     </div>
-
     <div class="card">
       <h2>
-        <span>Живой трекер: Факт vs План (Ноя 2026 — Фев 2027)</span>
+        <span>Факт vs План (ноя 2026 — фев 2027)</span>
         <span id="paceBadge" class="status-pill">В графике</span>
       </h2>
-      <div class="stat-sub" style="margin-bottom:12px;">Жёлтая живая линия строится по реальным пополнениям из журнала поверх плановой кривой (с учётом паузы 16–31 января 2027).</div>
+      <div class="stat-sub" style="margin-bottom:10px;">Жёлтая линия — реальные пополнения из журнала.</div>
       <div class="chart-container" id="nearTermChart"></div>
       <div class="legend">
-        <div class="legend-item"><span class="legend-color" style="background:var(--yellow)"></span> <strong>Реальные накопления (факт)</strong></div>
-        <div class="legend-item"><span class="legend-color" style="background:var(--accent)"></span> План (выход на 50 420 ₽ к 1 фев 2027)</div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--yellow)"></span> Факт</div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--accent)"></span> План (50 420 ₽ к 1 фев)</div>
       </div>
     </div>
-
     <div class="card">
-      <h2>Долгосрочная кривая роста до 27 лет (2026 — 2032 гг.)</h2>
-      <div class="stat-sub" style="margin-bottom:12px;">Жёлтая точка — твой текущий реальный капитал на общей шкале до 2032 года.</div>
+      <h2>Долгосрочный рост до 2032</h2>
+      <div class="stat-sub" style="margin-bottom:10px;">Жёлтая точка — текущий капитал.</div>
       <div class="chart-container" id="growthLineChart"></div>
       <div class="legend">
-        <div class="legend-item"><span class="legend-color" style="background:var(--yellow)"></span> <strong>Твой текущий факт</strong></div>
-        <div class="legend-item"><span class="legend-color" style="background:var(--green)"></span> Прогноз с инфляцией (18 млн ₽)</div>
-        <div class="legend-item"><span class="legend-color" style="background:var(--accent)"></span> Прогноз в ценах 2026 (12 млн ₽)</div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--yellow)"></span> Факт</div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--green)"></span> С инфляцией (~18 млн)</div>
+        <div class="legend-item"><span class="legend-color" style="background:var(--accent)"></span> В ценах 2026 (12 млн)</div>
       </div>
     </div>
   </div>
@@ -466,927 +472,639 @@
   <div id="tab-report" class="tab-content">
     <div class="grid">
       <div class="card">
-        <h2>Добавить операцию в журнал</h2>
-        <div class="field">
-          <label>Банк</label>
+        <h2>Добавить операцию</h2>
+        <div class="field"><label>Банк</label>
           <select id="logBank">
-            <option value="Альфа-Банк">Альфа-Банк («Стань миллионером»)</option>
-            <option value="Т-Банк">Т-Банк («СмартВклад»)</option>
+            <option value="Альфа-Банк">Альфа-Банк</option>
+            <option value="Т-Банк">Т-Банк</option>
             <option value="Сбербанк">Сбербанк</option>
           </select>
         </div>
-        <div class="field">
-          <label>Тип и сумма (₽)</label>
+        <div class="field"><label>Тип и сумма</label>
           <div class="input-row">
             <select id="logType" style="width:45%">
               <option value="Пополнение">Пополнение (+)</option>
-              <option value="Проценты">Проценты банка (+)</option>
+              <option value="Проценты">Проценты (+)</option>
               <option value="Снятие">Снятие (-)</option>
             </select>
             <input type="number" step="0.01" id="logAmount" placeholder="1000">
           </div>
         </div>
-        <div class="field">
-          <label>Дата и комментарий</label>
+        <div class="field"><label>Дата и комментарий</label>
           <div class="input-row">
             <input type="date" id="logDateInput" style="width:42%">
-            <input type="text" id="logNote" placeholder="Например: Учебный день">
+            <input type="text" id="logNote" placeholder="Учебный день">
           </div>
         </div>
-        <button class="btn" style="width:100%" onclick="addManualLog()">Записать операцию и обновить баланс</button>
+        <button class="btn" style="width:100%" onclick="addManualLog()">Записать и обновить баланс</button>
       </div>
-
       <div class="card">
-        <h2>Сводка и резервное копирование</h2>
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-          <span class="stat-sub">Всего операций в журнале:</span>
-          <strong id="repCount">0</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-          <span class="stat-sub">Пополнено своими деньгами:</span>
-          <strong style="color:#fff" id="repDeposits">0 ₽</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:18px;">
-          <span class="stat-sub">Получено процентами от банков:</span>
-          <strong style="color:var(--green)" id="repInterest">0 ₽</strong>
-        </div>
-        <hr style="border:0; border-top:1px solid var(--border); margin-bottom:16px;">
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn-outline" onclick="exportJSON()">Скачать бэкап (JSON)</button>
-          <label class="btn btn-outline" style="cursor:pointer;">
-            Загрузить JSON
-            <input type="file" accept=".json" style="display:none" onchange="importJSON(event)">
-          </label>
-          <button class="btn btn-outline" style="color:var(--red); border-color:rgba(239,68,68,0.3)" onclick="resetAll()">Сбросить всё</button>
+        <h2>Сводка и бэкап</h2>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span class="stat-sub">Операций:</span><strong id="repCount">0</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span class="stat-sub">Своими деньгами:</span><strong id="repDeposits">0 ₽</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:16px;"><span class="stat-sub">Процентами:</span><strong style="color:var(--green)" id="repInterest">0 ₽</strong></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="exportJSON()">Скачать JSON</button>
+          <label class="btn btn-outline" style="cursor:pointer;">Загрузить JSON<input type="file" accept=".json" style="display:none" onchange="importJSON(event)"></label>
+          <button class="btn btn-danger" onclick="resetAll()">Сбросить</button>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2>Налоговый контроль (НДФЛ с процентов)</h2>
-      <div class="stat-sub" style="margin-bottom:14px;">
-        Годовой доход по процентам сверх необлагаемого лимита облагается НДФЛ 13% (до 5 млн ₽). Лимит = <strong>1 000 000 ₽ × макс. ключевая ставка ЦБ за год</strong>. Проценты суммируются автоматически из журнала операций за выбранный год.
+      <h2>Налог на вклады (НДФЛ 13%)</h2>
+      <div class="stat-sub" style="margin-bottom:12px;">Лимит = 1 000 000 ₽ × максимальная ключевая ставка ЦБ за год. Проценты суммируются из журнала.</div>
+      <div class="grid" style="margin-bottom:12px; gap:12px;">
+        <div class="field" style="margin-bottom:0;"><label>Год</label><select id="taxYearSelect" onchange="renderTax()"></select></div>
+        <div class="field" style="margin-bottom:0;"><label>Макс. ставка ЦБ, %</label><input type="number" step="0.1" id="taxCbRate" oninput="saveTaxCbRate()" placeholder="16"></div>
       </div>
-
-      <div class="grid" style="margin-bottom:14px; gap:12px;">
-        <div class="field" style="margin-bottom:0;">
-          <label>Календарный год</label>
-          <select id="taxYearSelect" onchange="renderTax()"></select>
-        </div>
-        <div class="field" style="margin-bottom:0;">
-          <label>Макс. ключевая ставка ЦБ за год, %</label>
-          <input type="number" step="0.1" id="taxCbRate" oninput="saveTaxCbRate()" placeholder="16">
-        </div>
-      </div>
-
-      <div style="background:#0d1118; padding:14px; border-radius:10px; border:1px solid var(--border); margin-top:8px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-          <span class="stat-sub">Получено процентов за год:</span>
-          <strong style="color:#fff" id="taxInterest">0 ₽</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-          <span class="stat-sub">Необлагаемый лимит (1 млн ₽ × ставка ЦБ):</span>
-          <strong style="color:var(--green)" id="taxLimit">160 000 ₽</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-          <span class="stat-sub">Остаток необлагаемого лимита:</span>
-          <strong style="color:var(--accent)" id="taxRemain">160 000 ₽</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-          <span class="stat-sub">Сумма превышения:</span>
-          <strong style="color:var(--muted)" id="taxExcess">0 ₽</strong>
-        </div>
+      <div style="background:color-mix(in srgb, var(--bg) 60%, var(--card)); padding:14px; border-radius:12px; border:1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span class="stat-sub">Проценты за год:</span><strong id="taxInterest">0 ₽</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span class="stat-sub">Необлагаемый лимит:</span><strong style="color:var(--green)" id="taxLimit">160 000 ₽</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span class="stat-sub">Остаток лимита:</span><strong style="color:var(--accent)" id="taxRemain">160 000 ₽</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span class="stat-sub">Превышение:</span><strong id="taxExcess">0 ₽</strong></div>
         <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
-        <div style="display:flex; justify-content:space-between;">
-          <span class="stat-sub">Ориентировочный налог к уплате (13%):</span>
-          <strong id="taxDue" style="color:var(--green)">Налог не начисляется</strong>
-        </div>
+        <div style="display:flex; justify-content:space-between;"><span class="stat-sub">Налог 13%:</span><strong id="taxDue" style="color:var(--green)">0 ₽</strong></div>
       </div>
     </div>
 
     <div class="card">
       <h2>Журнал операций</h2>
+      <div class="search-log"><input type="search" id="logSearch" placeholder="Поиск по банку, типу или комментарию..." oninput="renderReport()"></div>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Дата</th>
-              <th>Банк</th>
-              <th>Тип</th>
-              <th>Комментарий</th>
-              <th style="text-align:right">Сумма</th>
-              <th></th>
-            </tr>
-          </thead>
+          <thead><tr><th>Дата</th><th>Банк</th><th>Тип</th><th>Комментарий</th><th style="text-align:right">Сумма</th><th></th></tr></thead>
           <tbody id="logTableBody"></tbody>
         </table>
       </div>
     </div>
   </div>
-
 </div>
 
+<div id="toast"></div>
+
 <script>
-  const defaultState = {
-    alfa: 2861.26,
-    tbank: 0,
-    sber: 0,
-    goal: 18000000,
-    rate: 27.42,
-    usdRate: 90.00,
-    rateDate: '23.11.2026 (базовый)',
-    flatByn: 323000,
-    carRub: 1289200,
-    repairRub: 1100000,
-    moveRub: 450000,
-    deposits: [],
-    s7Miles: 0,
-    s7MilesGoal: 30000,
-    taxCbRate: 16,
-    taxYear: new Date().getFullYear(),
-    // Добавлены базовые курсы для конвертера (на случай первого офлайн-запуска)
-    rates: { RUB: 1, USD: 90.00, BYN: 27.42, EUR: 98.00, CNY: 12.50 },
-    logs: [
-      { id: 1, isoDate: '2026-11-23', date: '23.11.2026', bank: 'Альфа-Банк', type: 'Пополнение', amount: 2861.26, note: 'Стартовый остаток на счёте «Стань миллионером» (10%)' }
-    ]
-  };
+const defaultState = {
+  alfa: 2861.26, tbank: 0, sber: 0,
+  goal: 18000000, rate: 27.42, usdRate: 90,
+  rateDate: '23.11.2026 (базовый)',
+  flatByn: 363000, carRub: 1289200, repairRub: 400000, moveRub: 450000,
+  deposits: [], s7Miles: 0, s7MilesGoal: 30000,
+  taxCbRate: 16, taxYear: new Date().getFullYear(),
+  rates: { RUB: 1, USD: 90, BYN: 27.42, EUR: 98, CNY: 12.5 },
+  logs: [{ id: 1, isoDate: '2026-11-23', date: '23.11.2026', bank: 'Альфа-Банк', type: 'Пополнение', amount: 2861.26, note: 'Стартовый остаток «Стань миллионером» (10%)' }],
+  theme: 'dark'
+};
 
-  const savedRaw = JSON.parse(localStorage.getItem('minskTrackerV3'));
-  let state = savedRaw ? { ...JSON.parse(JSON.stringify(defaultState)), ...savedRaw } : JSON.parse(JSON.stringify(defaultState));
+const savedRaw = JSON.parse(localStorage.getItem('minskTrackerV3') || 'null');
+let state = savedRaw ? { ...JSON.parse(JSON.stringify(defaultState)), ...savedRaw } : JSON.parse(JSON.stringify(defaultState));
 
-  function saveState() {
-    localStorage.setItem('minskTrackerV3', JSON.stringify(state));
-  }
+function saveState() { localStorage.setItem('minskTrackerV3', JSON.stringify(state)); }
 
-  function fmt(num) {
-    return Math.round(num).toLocaleString('ru-RU') + ' ₽';
-  }
+function toast(msg, ms = 2200) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), ms);
+}
 
-  function fmtExact(num) {
-    return num.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
-  }
+function fmt(num) { return Math.round(num).toLocaleString('ru-RU') + ' ₽'; }
+function fmtExact(num) { return num.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽'; }
+function getTodayISO() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+}
+function formatDisplayDate(iso) {
+  if (!iso || !iso.includes('-')) return iso;
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+}
 
-  function getTodayISO() {
-    const d = new Date();
-    const off = d.getTimezoneOffset();
-    const local = new Date(d.getTime() - (off * 60 * 1000));
-    return local.toISOString().split('T')[0];
-  }
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme || 'dark');
+  document.getElementById('themeToggle').textContent = (state.theme === 'light') ? '☀️' : '🌙';
+  document.querySelector('meta[name="theme-color"]').content = state.theme === 'light' ? '#f4f6f9' : '#0b0e14';
+}
+function toggleTheme() {
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  applyTheme();
+  saveState();
+}
 
-  function formatDisplayDate(isoStr) {
-    if (!isoStr || !isoStr.includes('-')) return isoStr;
-    const [y, m, d] = isoStr.split('-');
-    return `${d}.${m}.${y}`;
-  }
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  btn.classList.add('active');
+  if (tabId === 'charts') renderCharts();
+  if (tabId === 'report') { renderReport(); renderTax(); }
+  if (tabId === 'dash') { renderDepositList(); renderMiles(); updateConverter(); renderBudgetCategories(); }
+}
 
-  function switchTab(tabId, btn) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + tabId).classList.add('active');
-    btn.classList.add('active');
-    if (tabId === 'charts') renderCharts();
-    if (tabId === 'report') { renderReport(); renderTax(); }
-    if (tabId === 'dash') { renderDepositList(); renderMiles(); updateConverter(); }
-  }
-
-  async function fetchRates() {
-    const statusEl = document.getElementById('rateStatus');
-    const dotEl = document.getElementById('rateDot');
-    statusEl.textContent = 'Обновление курса...';
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
-      const res = await fetch('https://www.cbr-xml-daily.ru/daily_json.js', { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (!res.ok) throw new Error('Network error');
-      const data = await res.json();
-
-      // Парсим все нужные валюты
-      const newRates = { RUB: 1 };
-      ['USD', 'BYN', 'EUR', 'CNY'].forEach(c => {
-        if (data.Valute[c]) {
-          newRates[c] = +(data.Valute[c].Value / data.Valute[c].Nominal).toFixed(4);
-        }
-      });
-
-      state.rates = newRates;
-      state.rate = state.rates.BYN;
-      state.usdRate = state.rates.USD;
-      
-      const nowStr = new Date().toLocaleDateString('ru-RU');
-      state.rateDate = nowStr;
-      document.getElementById('rate').value = state.rate;
-
-      dotEl.classList.remove('offline');
-      statusEl.textContent = `Онлайн (ЦБ РФ на ${nowStr})`;
-      updateAll();
-      updateConverter();
-    } catch (e) {
-      dotEl.classList.add('offline');
-      statusEl.textContent = `Офлайн • сохранённый курс от ${state.rateDate}`;
-      document.getElementById('headerByn').textContent = state.rate.toFixed(2) + ' ₽';
-      document.getElementById('headerUsd').textContent = state.usdRate.toFixed(2) + ' ₽';
-      updateConverter(); // Пересчитываем по старым курсам
-    }
-  }
-
-  // Логика конвертера
-  function updateConverter() {
-    const amountInput = document.getElementById('convAmount');
-    const fromSel = document.getElementById('convFrom');
-    const toSel = document.getElementById('convTo');
-    const resultEl = document.getElementById('convResult');
-    
-    if(!amountInput || !fromSel || !toSel || !resultEl) return;
-
-    const amount = parseFloat(amountInput.value) || 0;
-    const from = fromSel.value;
-    const to = toSel.value;
-
-    // Берем курсы из стейта (актуальные или сохраненные офлайн)
-    const rates = state.rates || { RUB: 1, USD: 90, BYN: 27.42, EUR: 98, CNY: 12.5 };
-    const rateFrom = rates[from] || 1;
-    const rateTo = rates[to] || 1;
-
-    // Формула: (Сумма * Курс_От) / Курс_К
-    // Курсы ЦБ даны за 1 единицу валюты в рублях (для RUB = 1)
-    const result = (amount * rateFrom) / rateTo;
-
-    resultEl.textContent = result.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + to;
-  }
-
-  function quickAdd(bankKey, amount, noteText) {
-    const bankNames = { alfa: 'Альфа-Банк', tbank: 'Т-Банк', sber: 'Сбербанк' };
-    state[bankKey] = +(state[bankKey] + amount).toFixed(2);
-    document.getElementById(bankKey).value = state[bankKey];
-    const iso = getTodayISO();
-    state.logs.unshift({
-      id: Date.now(),
-      isoDate: iso,
-      date: formatDisplayDate(iso),
-      bank: bankNames[bankKey],
-      type: 'Пополнение',
-      amount: amount,
-      note: noteText
+async function fetchRates() {
+  const statusEl = document.getElementById('rateStatus');
+  const dotEl = document.getElementById('rateDot');
+  statusEl.textContent = 'Обновление...';
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4500);
+    const res = await fetch('https://www.cbr-xml-daily.ru/daily_json.js', { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const newRates = { RUB: 1 };
+    ['USD','BYN','EUR','CNY'].forEach(c => {
+      if (data.Valute[c]) newRates[c] = +(data.Valute[c].Value / data.Valute[c].Nominal).toFixed(4);
     });
-    updateAll();
-  }
-
-  let manualTimer = null;
-  function manualBalanceChange(bankKey) {
-    const oldVal = state[bankKey];
-    const newVal = parseFloat(document.getElementById(bankKey).value) || 0;
-    const diff = +(newVal - oldVal).toFixed(2);
-    updateAll();
-
-    clearTimeout(manualTimer);
-    if (Math.abs(diff) >= 0.01) {
-      manualTimer = setTimeout(() => {
-        const bankNames = { alfa: 'Альфа-Банк', tbank: 'Т-Банк', sber: 'Сбербанк' };
-        const iso = getTodayISO();
-        state.logs.unshift({
-          id: Date.now(),
-          isoDate: iso,
-          date: formatDisplayDate(iso),
-          bank: bankNames[bankKey],
-          type: diff > 0 ? 'Пополнение' : 'Снятие',
-          amount: diff,
-          note: 'Ручная корректировка баланса'
-        });
-        saveState();
-      }, 1200);
-    }
-  }
-
-  function updateAll() {
-    state.alfa = parseFloat(document.getElementById('alfa').value) || 0;
-    state.tbank = parseFloat(document.getElementById('tbank').value) || 0;
-    state.sber = parseFloat(document.getElementById('sber').value) || 0;
-    state.goal = parseFloat(document.getElementById('goal').value) || 0;
-    state.rate = parseFloat(document.getElementById('rate').value) || 0;
-    state.flatByn = parseFloat(document.getElementById('flatByn').value) || 0;
-    state.carRub = parseFloat(document.getElementById('carRub').value) || 0;
-    state.repairRub = parseFloat(document.getElementById('repairRub').value) || 0;
-    state.moveRub = parseFloat(document.getElementById('moveRub').value) || 0;
-
-    saveState();
-
+    state.rates = newRates;
+    state.rate = state.rates.BYN;
+    state.usdRate = state.rates.USD;
+    state.rateDate = new Date().toLocaleDateString('ru-RU');
+    document.getElementById('rate').value = state.rate;
     document.getElementById('headerByn').textContent = state.rate.toFixed(2) + ' ₽';
     document.getElementById('headerUsd').textContent = state.usdRate.toFixed(2) + ' ₽';
-
-    const total = state.alfa + state.tbank + state.sber;
-    const left = Math.max(0, state.goal - total);
-    const pct = state.goal > 0 ? Math.min(100, (total / state.goal) * 100) : 0;
-
-    document.getElementById('totalSaved').textContent = fmtExact(total);
-    document.getElementById('progBar').style.width = pct.toFixed(2) + '%';
-    document.getElementById('progText').textContent = `${pct.toFixed(3)}% от цели ${fmt(state.goal)}`;
-    document.getElementById('leftToSave').textContent = fmt(left);
-
-    const flatRub = state.flatByn * state.rate;
-    const totalCost = flatRub + state.carRub + state.repairRub + state.moveRub;
-    const budgetLeft = 12000000 - totalCost;
-
-    document.getElementById('flatRubOut').textContent = fmt(flatRub);
-    document.getElementById('totalCostOut').textContent = fmt(totalCost);
-    const bLeftEl = document.getElementById('budgetLeftOut');
-    bLeftEl.textContent = fmt(budgetLeft);
-    bLeftEl.style.color = budgetLeft >= 0 ? 'var(--green)' : 'var(--red)';
-
-    renderASV();
-
-    if (document.getElementById('tab-charts').classList.contains('active')) renderCharts();
-  }
-
-  function renderASV() {
-    const ASV_LIMIT = 1400000;
-    const ASV_WARN = 1350000;
-
-    const banks = [
-      { key: 'alfa', name: 'Альфа-Банк', bar: 'asvMiniAlfa', text: 'asvMiniAlfaText' },
-      { key: 'tbank', name: 'Т-Банк', bar: 'asvMiniTbank', text: 'asvMiniTbankText' },
-      { key: 'sber', name: 'Сбербанк', bar: 'asvMiniSber', text: 'asvMiniSberText' }
-    ];
-
-    let overLimitBanks = [];
-
-    banks.forEach(b => {
-      const val = state[b.key] || 0;
-      const pct = Math.min(100, (val / ASV_LIMIT) * 100);
-      const barEl = document.getElementById(b.bar);
-      const txtEl = document.getElementById(b.text);
-
-      if (barEl) {
-        barEl.style.width = pct + '%';
-        barEl.style.background = pct >= 100 ? 'var(--red)' : pct >= 80 ? 'var(--yellow)' : 'var(--green)';
-      }
-      if (txtEl) {
-        txtEl.textContent = `${Math.round(val).toLocaleString('ru-RU')} / 1 400 000 ₽`;
-        txtEl.style.color = pct >= 100 ? 'var(--red)' : pct >= 80 ? 'var(--yellow)' : 'var(--muted)';
-      }
-      if (val > ASV_WARN) overLimitBanks.push({ name: b.name, val });
-    });
-
-    const warnEl = document.getElementById('asvWarning');
-    if (warnEl) {
-      if (overLimitBanks.length > 0) {
-        warnEl.style.display = 'block';
-        const lines = overLimitBanks.map(b => `• ${b.name}: ${fmt(b.val)} (превышение над лимитом 1,4 млн: ${fmt(b.val - ASV_LIMIT)})`).join('<br>');
-        warnEl.innerHTML = `⚠ <strong>Внимание, перелимит по АСВ!</strong><br>${lines}<br><em>Всё, что выше 1 400 000 ₽ в одном банке, государством не страхуется.</em>`;
-      } else {
-        warnEl.style.display = 'none';
-      }
-    }
-
-    const total = state.alfa + state.tbank + state.sber;
-    const currEl = document.getElementById('currencyHint');
-    if (currEl) {
-      if (total >= 1500000) {
-        const lowPct = Math.round(total * 0.40);
-        const highPct = Math.round(total * 0.50);
-        currEl.style.display = 'block';
-        currEl.innerHTML = `💱 <strong>Валютная защита.</strong> Общий капитал ${fmt(total)} превысил 1,5 млн ₽. Жильё в РБ привязано к доллару — рассмотри перевод <strong>${fmt(lowPct)} – ${fmt(highPct)}</strong> (40–50%) в валютные депозиты (юань/доллар) для защиты от курсовых рисков.`;
-      } else {
-        currEl.style.display = 'none';
-      }
-    }
-  }
-
-  function addDeposit() {
-    const bank = document.getElementById('depBank').value;
-    const name = document.getElementById('depName').value.trim();
-    const amount = parseFloat(document.getElementById('depAmount').value);
-    const rate = parseFloat(document.getElementById('depRate').value) || 0;
-    const endDate = document.getElementById('depEnd').value;
-
-    if (!amount || amount <= 0) return alert('Укажите сумму вклада');
-    if (!endDate) return alert('Укажите дату окончания');
-
-    state.deposits = state.deposits || [];
-    state.deposits.push({
-      id: Date.now(),
-      bank,
-      name,
-      amount,
-      rate,
-      endDate
-    });
-
-    document.getElementById('depName').value = '';
-    document.getElementById('depAmount').value = '';
-    document.getElementById('depRate').value = '';
-
-    saveState();
-    renderDepositList();
-  }
-
-  function deleteDeposit(id) {
-    state.deposits = (state.deposits || []).filter(d => d.id !== id);
-    saveState();
-    renderDepositList();
-  }
-
-  function renderDepositList() {
-    const tbody = document.getElementById('depositTableBody');
-    const alertEl = document.getElementById('depositAlert');
-    if (!tbody) return;
-
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
-    const deposits = [...(state.deposits || [])].sort((a, b) => (a.endDate || '').localeCompare(b.endDate || ''));
-
-    if (deposits.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px">Пока нет активных вкладов. Добавь первый, чтобы видеть сроки.</td></tr>';
-      if (alertEl) alertEl.style.display = 'none';
-      return;
-    }
-
-    let nearEnd = [];
-
-    tbody.innerHTML = deposits.map(d => {
-      const end = d.endDate ? new Date(d.endDate + 'T00:00:00') : null;
-      const daysLeft = end ? Math.ceil((end - now) / (1000 * 60 * 60 * 24)) : null;
-
-      let statusHtml = '<span class="badge" style="background:rgba(138,148,166,0.15); color:var(--muted)">без даты</span>';
-      let rowClass = '';
-
-      if (daysLeft !== null) {
-        if (daysLeft < 0) {
-          statusHtml = '<span class="badge" style="background:rgba(239,68,68,0.15); color:#f87171">истёк</span>';
-          rowClass = 'dep-row-expired';
-        } else if (daysLeft <= 5) {
-          statusHtml = `<span class="badge" style="background:rgba(245,158,11,0.25); color:#fbbf24">⚠ ${daysLeft} дн.</span>`;
-          rowClass = 'dep-row-warn';
-          nearEnd.push(`${d.bank} • ${d.name || 'вклад'} (${fmt(d.amount)}) — через ${daysLeft} дн.`);
-        } else if (daysLeft <= 30) {
-          statusHtml = `<span class="badge" style="background:rgba(59,130,246,0.15); color:#60a5fa">${daysLeft} дн.</span>`;
-        } else {
-          statusHtml = `<span class="badge" style="background:rgba(16,185,129,0.15); color:#34d399">${daysLeft} дн.</span>`;
-        }
-      }
-
-      const badgeClass = d.bank === 'Альфа-Банк' ? 'b-alfa' : (d.bank === 'Т-Банк' ? 'b-tbank' : 'b-sber');
-
-      return `
-        <tr class="${rowClass}">
-          <td><span class="badge ${badgeClass}">${d.bank}</span></td>
-          <td>${d.name || '—'}</td>
-          <td class="num">${d.rate ? d.rate + '%' : '—'}</td>
-          <td class="num">${fmt(d.amount)}</td>
-          <td>${d.endDate ? formatDisplayDate(d.endDate) : '—'}</td>
-          <td style="text-align:right;">${statusHtml} <button class="btn btn-sm btn-outline" onclick="deleteDeposit(${d.id})" title="Удалить">✕</button></td>
-        </tr>
-      `;
-    }).join('');
-
-    if (alertEl) {
-      if (nearEnd.length > 0) {
-        alertEl.style.display = 'block';
-        alertEl.innerHTML = `⏰ <strong>Скоро закрытие:</strong> подготовь перевод!<br>• ${nearEnd.join('<br>• ')}<br><em>Для промоставок «новые деньги» дай деньгам «отлежаться» 60–90 дней в другом банке.</em>`;
-      } else {
-        alertEl.style.display = 'none';
-      }
-    }
-  }
-
-  function updateMiles() {
-    state.s7Miles = Math.max(0, parseFloat(document.getElementById('s7Miles').value) || 0);
-    state.s7MilesGoal = Math.max(0, parseFloat(document.getElementById('s7Goal').value) || 30000);
-    saveState();
-    renderMiles();
-  }
-
-  function renderMiles() {
-    const miles = state.s7Miles || 0;
-    const goal = state.s7MilesGoal || 30000;
-    const pct = goal > 0 ? Math.min(100, (miles / goal) * 100) : 0;
-
-    const input = document.getElementById('s7Miles');
-    const goalInput = document.getElementById('s7Goal');
-    const bar = document.getElementById('s7Bar');
-    const txt = document.getElementById('s7Text');
-
-    if (input && document.activeElement !== input) input.value = miles;
-    if (goalInput && document.activeElement !== goalInput) goalInput.value = goal;
-    if (bar) bar.style.width = pct + '%';
-    if (txt) {
-      if (pct >= 100) {
-        txt.innerHTML = `<strong style="color:var(--green)">✈ ${miles.toLocaleString('ru-RU')} из ${goal.toLocaleString('ru-RU')} миль — билет уже «оплачен» тратами!</strong>`;
-      } else {
-        txt.textContent = `${miles.toLocaleString('ru-RU')} из ${goal.toLocaleString('ru-RU')} миль (${pct.toFixed(1)}%)`;
-        txt.style.color = 'var(--muted)';
-      }
-    }
-  }
-
-  function populateTaxYears() {
-    const sel = document.getElementById('taxYearSelect');
-    if (!sel) return;
-    const current = new Date().getFullYear();
-    const years = [];
-    (state.logs || []).forEach(l => {
-      if (l.isoDate) years.push(parseInt(l.isoDate.slice(0, 4), 10));
-    });
-    for (let i = 0; i < 3; i++) years.push(current - i);
-    years.push(current + 1);
-
-    const uniq = [...new Set(years.filter(y => !isNaN(y)))].sort((a, b) => b - a);
-    sel.innerHTML = uniq.map(y => `<option value="${y}">${y}</option>`).join('');
-    sel.value = state.taxYear || current;
-  }
-
-  function saveTaxCbRate() {
-    state.taxCbRate = parseFloat(document.getElementById('taxCbRate').value) || 16;
-    saveState();
-    renderTax();
-  }
-
-  function renderTax() {
-    const sel = document.getElementById('taxYearSelect');
-    const cbRateInput = document.getElementById('taxCbRate');
-    if (!sel || !cbRateInput) return;
-
-    if (document.activeElement !== cbRateInput) {
-      cbRateInput.value = state.taxCbRate || 16;
-    }
-
-    const year = parseInt(sel.value, 10) || new Date().getFullYear();
-    state.taxYear = year;
-
-    const cbRate = parseFloat(cbRateInput.value) || state.taxCbRate || 16;
-    const limit = Math.round(1000000 * (cbRate / 100));
-
-    let yearInterest = 0;
-    (state.logs || []).forEach(l => {
-      if (l.type === 'Проценты' && l.isoDate && parseInt(l.isoDate.slice(0, 4), 10) === year) {
-        yearInterest += Math.abs(l.amount);
-      }
-    });
-
-    const remain = Math.max(0, limit - yearInterest);
-    const excess = Math.max(0, yearInterest - limit);
-    const taxDue = excess * 0.13;
-
-    document.getElementById('taxInterest').textContent = fmtExact(yearInterest);
-    document.getElementById('taxLimit').textContent = fmt(limit);
-    document.getElementById('taxRemain').textContent = fmt(remain);
-    document.getElementById('taxExcess').textContent = fmt(excess);
-
-    const dueEl = document.getElementById('taxDue');
-    if (taxDue > 0) {
-      dueEl.textContent = fmt(taxDue);
-      dueEl.style.color = 'var(--red)';
-    } else {
-      dueEl.textContent = 'Налог не начисляется';
-      dueEl.style.color = 'var(--green)';
-    }
-
-    saveState();
-  }
-
-  function renderCharts() {
-    const currentTotal = state.alfa + state.tbank + state.sber;
-
-    const banks = [
-      { name: 'Альфа-Банк', val: state.alfa, color: '#ef4444' },
-      { name: 'Т-Банк', val: state.tbank, color: '#f59e0b' },
-      { name: 'Сбербанк', val: state.sber, color: '#10b981' }
-    ];
-    const maxBank = Math.max(...banks.map(b => b.val), 1000);
-    let bankSvg = `<svg viewBox="0 0 400 160">`;
-    banks.forEach((b, i) => {
-      const y = 15 + i * 48;
-      const w = Math.max(4, (b.val / maxBank) * 230);
-      bankSvg += `
-        <text x="0" y="${y + 16}" fill="#e2e8f0" font-size="13" font-weight="600">${b.name}</text>
-        <rect x="105" y="${y}" width="230" height="24" rx="6" fill="#0d1118" />
-        <rect x="105" y="${y}" width="${w}" height="24" rx="6" fill="${b.color}" />
-        <text x="342" y="${y + 16}" fill="#fff" font-size="12" font-weight="600">${Math.round(b.val).toLocaleString('ru-RU')} ₽</text>
-      `;
-    });
-    bankSvg += `</svg>`;
-    document.getElementById('bankBarChart').innerHTML = bankSvg;
-
-    const flatRub = state.flatByn * state.rate;
-    const parts = [
-      { name: 'Квартира', val: flatRub, color: '#3b82f6' },
-      { name: 'Авто в РБ', val: state.carRub, color: '#8b5cf6' },
-      { name: 'Ремонт/сетап', val: state.repairRub, color: '#f59e0b' },
-      { name: 'Переезд/резерв', val: state.moveRub, color: '#10b981' }
-    ];
-    const maxPart = Math.max(...parts.map(p => p.val), 1);
-    let partSvg = `<svg viewBox="0 0 400 185">`;
-    parts.forEach((p, i) => {
-      const y = 10 + i * 44;
-      const w = Math.max(4, (p.val / maxPart) * 210);
-      partSvg += `
-        <text x="0" y="${y + 16}" fill="#e2e8f0" font-size="12" font-weight="600">${p.name}</text>
-        <rect x="115" y="${y}" width="210" height="22" rx="6" fill="#0d1118" />
-        <rect x="115" y="${y}" width="${w}" height="22" rx="6" fill="${p.color}" />
-        <text x="332" y="${y + 16}" fill="#fff" font-size="11" font-weight="600">${(p.val / 1000000).toFixed(2)} млн</text>
-      `;
-    });
-    partSvg += `</svg>`;
-    document.getElementById('budgetBarChart').innerHTML = partSvg;
-
-    const milestones = [
-      { date: '2026-11-23', label: '23 ноя', plan: 2861.26 },
-      { date: '2026-12-01', label: '1 дек', plan: 6870.04 },
-      { date: '2026-12-15', label: '15 дек', plan: 16870.00 },
-      { date: '2027-01-01', label: '1 янв (НГ)', plan: 40035.04 },
-      { date: '2027-01-15', label: '15 янв', plan: 44035.04 },
-      { date: '2027-01-31', label: '31 янв', plan: 49420.04 },
-      { date: '2027-02-01', label: '1 фев (Вклад)', plan: 50420.04 }
-    ];
-
-    const sortedLogs = [...state.logs].sort((a, b) => (a.isoDate || '').localeCompare(b.isoDate || ''));
-    const latestLogDate = sortedLogs.length > 0 ? (sortedLogs[sortedLogs.length - 1].isoDate || '2026-11-23') : '2026-11-23';
-
-    const factPoints = [];
-    milestones.forEach((m, idx) => {
-      if (idx === 0 || m.date <= latestLogDate) {
-        let sumAtDate = 0;
-        sortedLogs.forEach(l => {
-          if ((l.isoDate || '2026-11-23') <= m.date) sumAtDate += l.amount;
-        });
-        if (idx === 0 && latestLogDate <= '2026-11-23') sumAtDate = currentTotal;
-        factPoints.push({ idx, val: Math.max(0, sumAtDate), label: m.label, plan: m.plan });
-      }
-    });
-
-    const lastFact = factPoints[factPoints.length - 1];
-    const diffPlan = currentTotal - lastFact.plan;
-    const badgeEl = document.getElementById('paceBadge');
-    if (diffPlan > 10) {
-      badgeEl.textContent = `Опережение плана: +${Math.round(diffPlan).toLocaleString('ru-RU')} ₽`;
-      badgeEl.style.background = 'rgba(16,185,129,0.15)';
-      badgeEl.style.color = 'var(--green)';
-    } else if (diffPlan < -10) {
-      badgeEl.textContent = `Отставание от плана: ${Math.round(diffPlan).toLocaleString('ru-RU')} ₽`;
-      badgeEl.style.background = 'rgba(239,68,68,0.15)';
-      badgeEl.style.color = 'var(--red)';
-    } else {
-      badgeEl.textContent = 'Идёшь ровно по плану';
-      badgeEl.style.background = 'rgba(59,130,246,0.15)';
-      badgeEl.style.color = 'var(--accent)';
-    }
-
-    const W1 = 800, H1 = 230, pL1 = 65, pR1 = 35, pT1 = 25, pB1 = 35;
-    const plW1 = W1 - pL1 - pR1, plH1 = H1 - pT1 - pB1;
-    const maxY1 = Math.max(55000, currentTotal * 1.15);
-
-    let nearSvg = `<svg viewBox="0 0 ${W1} ${H1}">`;
-    [0, 15000, 30000, 45000, 55000].forEach(v => {
-      if (v > maxY1) return;
-      const y = pT1 + plH1 - (v / maxY1) * plH1;
-      nearSvg += `<line x1="${pL1}" y1="${y}" x2="${W1 - pR1}" y2="${y}" stroke="#252d3d" stroke-dasharray="4" />`;
-      nearSvg += `<text x="${pL1 - 8}" y="${y + 4}" fill="#8a94a6" font-size="11" text-anchor="end">${(v / 1000).toFixed(0)} тыс.</text>`;
-    });
-
-    const planCoords = milestones.map((m, i) => {
-      const x = pL1 + (i / (milestones.length - 1)) * plW1;
-      const y = pT1 + plH1 - (m.plan / maxY1) * plH1;
-      return `${x},${y}`;
-    }).join(' ');
-    nearSvg += `<polyline fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,4" points="${planCoords}" />`;
-
-    milestones.forEach((m, i) => {
-      const x = pL1 + (i / (milestones.length - 1)) * plW1;
-      const y = pT1 + plH1 - (m.plan / maxY1) * plH1;
-      nearSvg += `<circle cx="${x}" cy="${y}" r="3.5" fill="#3b82f6" />`;
-      nearSvg += `<text x="${x}" y="${H1 - 10}" fill="#8a94a6" font-size="11" text-anchor="middle">${m.label}</text>`;
-    });
-
-    if (factPoints.length > 1) {
-      const factCoords = factPoints.map(fp => {
-        const x = pL1 + (fp.idx / (milestones.length - 1)) * plW1;
-        const y = pT1 + plH1 - (fp.val / maxY1) * plH1;
-        return `${x},${y}`;
-      }).join(' ');
-      nearSvg += `<polyline fill="none" stroke="#f59e0b" stroke-width="4" points="${factCoords}" />`;
-    }
-
-    factPoints.forEach((fp, i) => {
-      const x = pL1 + (fp.idx / (milestones.length - 1)) * plW1;
-      const valToShow = (i === factPoints.length - 1) ? currentTotal : fp.val;
-      const y = pT1 + plH1 - (valToShow / maxY1) * plH1;
-      nearSvg += `<circle cx="${x}" cy="${y}" r="5.5" fill="#f59e0b" stroke="#0b0e14" stroke-width="2" />`;
-      nearSvg += `<text x="${x}" y="${y - 11}" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">${Math.round(valToShow).toLocaleString('ru-RU')} ₽</text>`;
-    });
-
-    nearSvg += `</svg>`;
-    document.getElementById('nearTermChart').innerHTML = nearSvg;
-
-    const pointsInfl = [
-      { label: '2026', val: 0.003 },
-      { label: '2027', val: 0.28 },
-      { label: '2028 (выпуск)', val: 0.45 },
-      { label: '2029', val: 1.89 },
-      { label: '2030', val: 6.20 },
-      { label: '2031', val: 11.80 },
-      { label: '2032 (27 лет)', val: 18.00 }
-    ];
-    const pointsBase = [0.003, 0.28, 0.45, 1.50, 4.50, 8.20, 12.00];
-    const W = 800, H = 230, padL = 55, padR = 30, padT = 20, padB = 35;
-    const plotW = W - padL - padR, plotH = H - padT - padB;
-    const maxY = Math.max(18, currentTotal / 1000000);
-
-    let lineSvg = `<svg viewBox="0 0 ${W} ${H}">`;
-    [0, 4.5, 9, 13.5, 18].forEach(v => {
-      const y = padT + plotH - (v / maxY) * plotH;
-      lineSvg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#252d3d" stroke-dasharray="4" />`;
-      lineSvg += `<text x="${padL - 8}" y="${y + 4}" fill="#8a94a6" font-size="11" text-anchor="end">${v} млн</text>`;
-    });
-
-    const getCoords = (arr) => arr.map((v, i) => {
-      const x = padL + (i / (arr.length - 1)) * plotW;
-      const y = padT + plotH - (v / maxY) * plotH;
-      return `${x},${y}`;
-    }).join(' ');
-
-    lineSvg += `<polyline fill="none" stroke="#3b82f6" stroke-width="3" points="${getCoords(pointsBase)}" />`;
-    lineSvg += `<polyline fill="none" stroke="#10b981" stroke-width="3.5" points="${getCoords(pointsInfl.map(p => p.val))}" />`;
-
-    pointsInfl.forEach((p, i) => {
-      const x = padL + (i / (pointsInfl.length - 1)) * plotW;
-      const y = padT + plotH - (p.val / maxY) * plotH;
-      lineSvg += `<circle cx="${x}" cy="${y}" r="4.5" fill="#10b981" stroke="#0b0e14" stroke-width="2" />`;
-      lineSvg += `<text x="${x}" y="${H - 10}" fill="#8a94a6" font-size="11" text-anchor="middle">${p.label}</text>`;
-      if (i > 1) {
-        lineSvg += `<text x="${x}" y="${y - 10}" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">${p.val}м</text>`;
-      }
-    });
-
-    const curYear = new Date().getFullYear();
-    const yearIdx = Math.max(0, Math.min(6, curYear - 2026));
-    const curX = padL + (yearIdx / 6) * plotW;
-    const curMln = currentTotal / 1000000;
-    const curY = padT + plotH - (curMln / maxY) * plotH;
-    lineSvg += `<circle cx="${curX}" cy="${curY}" r="6.5" fill="#f59e0b" stroke="#fff" stroke-width="2" />`;
-    lineSvg += `<text x="${curX + 10}" y="${curY - 8}" fill="#fbbf24" font-size="12" font-weight="700">Факт: ${curMln.toFixed(3)} млн</text>`;
-
-    lineSvg += `</svg>`;
-    document.getElementById('growthLineChart').innerHTML = lineSvg;
-  }
-
-  function addManualLog() {
-    const bank = document.getElementById('logBank').value;
-    const type = document.getElementById('logType').value;
-    const amount = parseFloat(document.getElementById('logAmount').value);
-    const isoDate = document.getElementById('logDateInput').value || getTodayISO();
-    const note = document.getElementById('logNote').value.trim() || type;
-
-    if (!amount || amount <= 0) return alert('Введите сумму больше нуля');
-
-    const mapKey = { 'Альфа-Банк': 'alfa', 'Т-Банк': 'tbank', 'Сбербанк': 'sber' };
-    const key = mapKey[bank];
-    const delta = type === 'Снятие' ? -amount : amount;
-
-    state[key] = Math.max(0, +(state[key] + delta).toFixed(2));
-    document.getElementById(key).value = state[key];
-
-    state.logs.unshift({
-      id: Date.now(),
-      isoDate,
-      date: formatDisplayDate(isoDate),
-      bank,
-      type,
-      amount: delta,
-      note
-    });
-
-    document.getElementById('logAmount').value = '';
-    document.getElementById('logNote').value = '';
+    dotEl.classList.remove('offline');
+    statusEl.textContent = `ЦБ РФ на ${state.rateDate}`;
     updateAll();
-    renderReport();
-    populateTaxYears();
-    renderTax();
-  }
-
-  function deleteLog(id) {
-    state.logs = state.logs.filter(item => item.id !== id);
-    saveState();
-    renderReport();
-    renderTax();
-  }
-
-  function renderReport() {
-    const tbody = document.getElementById('logTableBody');
-    let deposits = 0, interest = 0;
-
-    tbody.innerHTML = state.logs.map(item => {
-      if (item.type === 'Пополнение') deposits += item.amount;
-      if (item.type === 'Проценты') interest += item.amount;
-
-      const badgeClass = item.bank === 'Альфа-Банк' ? 'b-alfa' : (item.bank === 'Т-Банк' ? 'b-tbank' : 'b-sber');
-      const sign = item.amount >= 0 ? '+' : '';
-      const color = item.amount >= 0 ? 'var(--green)' : 'var(--red)';
-
-      return `
-        <tr>
-          <td style="color:var(--muted)">${item.date}</td>
-          <td><span class="badge ${badgeClass}">${item.bank}</span></td>
-          <td>${item.type}</td>
-          <td>${item.note}</td>
-          <td class="num" style="color:${color}">${sign}${fmtExact(item.amount)}</td>
-          <td style="text-align:right"><button class="btn btn-sm btn-outline" onclick="deleteLog(${item.id})">✕</button></td>
-        </tr>
-      `;
-    }).join('');
-
-    document.getElementById('repCount').textContent = state.logs.length;
-    document.getElementById('repDeposits').textContent = fmtExact(deposits);
-    document.getElementById('repInterest').textContent = fmtExact(interest);
-  }
-
-  function exportJSON() {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `minsk-plan-${getTodayISO()}.json`;
-    a.click();
-  }
-
-  function importJSON(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const imported = JSON.parse(e.target.result);
-        state = { ...JSON.parse(JSON.stringify(defaultState)), ...imported };
-        initInputs();
-        updateAll();
-        renderReport();
-        renderDepositList();
-        renderMiles();
-        populateTaxYears();
-        renderTax();
-        updateConverter();
-        alert('Данные успешно загружены!');
-      } catch (err) {
-        alert('Ошибка чтения файла JSON');
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function resetAll() {
-    if (!confirm('Сбросить все балансы, вклады и журнал к стартовым значениям?')) return;
-    state = JSON.parse(JSON.stringify(defaultState));
-    initInputs();
-    updateAll();
-    renderReport();
-    renderDepositList();
-    renderMiles();
-    populateTaxYears();
-    renderTax();
+    updateConverter();
+    toast('Курс обновлён');
+  } catch {
+    dotEl.classList.add('offline');
+    statusEl.textContent = `Офлайн • ${state.rateDate}`;
+    document.getElementById('headerByn').textContent = state.rate.toFixed(2) + ' ₽';
+    document.getElementById('headerUsd').textContent = state.usdRate.toFixed(2) + ' ₽';
     updateConverter();
   }
+}
 
-  function initInputs() {
-    ['alfa', 'tbank', 'sber', 'goal', 'rate', 'flatByn', 'carRub', 'repairRub', 'moveRub'].forEach(id => {
-      document.getElementById(id).value = state[id];
-    });
-    document.getElementById('logDateInput').value = getTodayISO();
-    document.getElementById('s7Miles').value = state.s7Miles || 0;
-    document.getElementById('s7Goal').value = state.s7MilesGoal || 30000;
-    document.getElementById('taxCbRate').value = state.taxCbRate || 16;
+function updateConverter() {
+  const amount = parseFloat(document.getElementById('convAmount').value) || 0;
+  const from = document.getElementById('convFrom').value;
+  const to = document.getElementById('convTo').value;
+  const rates = state.rates || { RUB:1, USD:90, BYN:27.42, EUR:98, CNY:12.5 };
+  const result = (amount * (rates[from] || 1)) / (rates[to] || 1);
+  document.getElementById('convResult').textContent = result.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + to;
+}
 
-    const depEnd = document.getElementById('depEnd');
-    if (depEnd) {
-      const d = new Date();
-      d.setMonth(d.getMonth() + 4);
-      depEnd.value = d.toISOString().split('T')[0];
-    }
-  }
-
-  initInputs();
+function quickAdd(bankKey, amount, note) {
+  const names = { alfa:'Альфа-Банк', tbank:'Т-Банк', sber:'Сбербанк' };
+  state[bankKey] = +(state[bankKey] + amount).toFixed(2);
+  document.getElementById(bankKey).value = state[bankKey];
+  const iso = getTodayISO();
+  state.logs.unshift({ id: Date.now(), isoDate: iso, date: formatDisplayDate(iso), bank: names[bankKey], type: 'Пополнение', amount, note });
   updateAll();
+  toast(`+${amount.toLocaleString('ru-RU')} ₽ → ${names[bankKey]}`);
+}
+
+let manualTimer;
+function manualBalanceChange(bankKey) {
+  const old = state[bankKey];
+  const neu = parseFloat(document.getElementById(bankKey).value) || 0;
+  const diff = +(neu - old).toFixed(2);
+  updateAll();
+  clearTimeout(manualTimer);
+  if (Math.abs(diff) >= 0.01) {
+    manualTimer = setTimeout(() => {
+      const names = { alfa:'Альфа-Банк', tbank:'Т-Банк', sber:'Сбербанк' };
+      const iso = getTodayISO();
+      state.logs.unshift({ id: Date.now(), isoDate: iso, date: formatDisplayDate(iso), bank: names[bankKey], type: diff > 0 ? 'Пополнение' : 'Снятие', amount: diff, note: 'Ручная корректировка' });
+      saveState();
+    }, 900);
+  }
+}
+
+function updateAll() {
+  state.alfa = parseFloat(document.getElementById('alfa').value) || 0;
+  state.tbank = parseFloat(document.getElementById('tbank').value) || 0;
+  state.sber = parseFloat(document.getElementById('sber').value) || 0;
+  state.goal = parseFloat(document.getElementById('goal').value) || 18000000;
+  state.rate = parseFloat(document.getElementById('rate').value) || 27.42;
+  state.flatByn = parseFloat(document.getElementById('flatByn').value) || 0;
+  state.carRub = parseFloat(document.getElementById('carRub').value) || 0;
+  state.repairRub = parseFloat(document.getElementById('repairRub').value) || 0;
+  state.moveRub = parseFloat(document.getElementById('moveRub').value) || 0;
+  saveState();
+
+  const total = state.alfa + state.tbank + state.sber;
+  const pct = Math.min(100, (total / state.goal) * 100);
+  document.getElementById('totalSaved').textContent = fmt(total);
+  document.getElementById('progBar').style.width = pct + '%';
+  document.getElementById('progText').textContent = pct.toFixed(1) + '% от цели';
+  document.getElementById('leftToSave').textContent = fmt(Math.max(0, state.goal - total));
+
+  const circ = document.getElementById('goalCircle');
+  if (circ) circ.style.strokeDashoffset = 264 - (264 * pct / 100);
+
+  const flatRub = state.flatByn * state.rate;
+  const totalCost = flatRub + state.carRub + state.repairRub + state.moveRub;
+  document.getElementById('flatRubOut').textContent = fmt(flatRub);
+  document.getElementById('totalCostOut').textContent = fmt(totalCost);
+  document.getElementById('budgetLeftOut').textContent = fmt(12000000 - totalCost);
+
+  renderASV();
+  renderBudgetCategories();
+}
+
+function renderBudgetCategories() {
+  const total = state.alfa + state.tbank + state.sber;
+  const flatRub = state.flatByn * state.rate;
+  const items = [
+    { name: 'Квартира', need: flatRub },
+    { name: 'Авто', need: state.carRub },
+    { name: 'Сетап / техника', need: state.repairRub },
+    { name: 'Переезд + подушка', need: state.moveRub }
+  ];
+  const el = document.getElementById('budgetCategories');
+  if (!el) return;
+  el.innerHTML = items.map(it => {
+    const pct = it.need > 0 ? Math.min(100, (total / it.need) * 100) : 0;
+    const remain = Math.max(0, it.need - total);
+    return `<div class="budget-item">
+      <div class="top"><span class="name">${it.name}</span><span>${fmt(it.need)}</span></div>
+      <div class="progress-wrap" style="height:8px;"><div class="progress-bar" style="width:${pct}%; background:var(--accent)"></div></div>
+      <div class="remain">Осталось: ${fmt(remain)} (${pct.toFixed(0)}%)</div>
+    </div>`;
+  }).join('');
+}
+
+function renderASV() {
+  const LIMIT = 1400000, WARN = 1350000;
+  const banks = [
+    { key:'alfa', bar:'asvMiniAlfa', text:'asvMiniAlfaText' },
+    { key:'tbank', bar:'asvMiniTbank', text:'asvMiniTbankText' },
+    { key:'sber', bar:'asvMiniSber', text:'asvMiniSberText' }
+  ];
+  let overs = [];
+  banks.forEach(b => {
+    const val = state[b.key] || 0;
+    const pct = Math.min(100, val / LIMIT * 100);
+    const bar = document.getElementById(b.bar);
+    const txt = document.getElementById(b.text);
+    if (bar) { bar.style.width = pct+'%'; bar.style.background = pct>=100?'var(--red)':pct>=80?'var(--yellow)':'var(--green)'; }
+    if (txt) { txt.textContent = Math.round(val).toLocaleString('ru-RU') + ' / 1,4 млн'; txt.style.color = pct>=100?'var(--red)':pct>=80?'var(--yellow)':'var(--muted)'; }
+    if (val > WARN) overs.push(b.key);
+  });
+  const warn = document.getElementById('asvWarning');
+  if (warn) {
+    warn.style.display = overs.length ? 'block' : 'none';
+    if (overs.length) warn.innerHTML = '⚠ <strong>Перелимит АСВ!</strong> Свыше 1,4 млн в одном банке не страхуется.';
+  }
+  const total = state.alfa + state.tbank + state.sber;
+  const curr = document.getElementById('currencyHint');
+  if (curr) {
+    if (total >= 1500000) {
+      curr.style.display = 'block';
+      curr.innerHTML = `💱 Капитал ${fmt(total)}. Рассмотри 40–50% в валютных депозитах (USD/CNY) для защиты от курса.`;
+    } else curr.style.display = 'none';
+  }
+}
+
+function addDeposit() {
+  const bank = document.getElementById('depBank').value;
+  const name = document.getElementById('depName').value.trim();
+  const amount = parseFloat(document.getElementById('depAmount').value);
+  const rate = parseFloat(document.getElementById('depRate').value) || 0;
+  const endDate = document.getElementById('depEnd').value;
+  if (!amount || amount <= 0) return toast('Укажите сумму');
+  if (!endDate) return toast('Укажите дату окончания');
+  state.deposits = state.deposits || [];
+  state.deposits.push({ id: Date.now(), bank, name, amount, rate, endDate });
+  document.getElementById('depName').value = '';
+  document.getElementById('depAmount').value = '';
+  document.getElementById('depRate').value = '';
+  saveState();
   renderDepositList();
+  toast('Вклад добавлен');
+}
+
+function deleteDeposit(id) {
+  if (!confirm('Удалить вклад?')) return;
+  state.deposits = (state.deposits || []).filter(d => d.id !== id);
+  saveState();
+  renderDepositList();
+}
+
+function renderDepositList() {
+  const tbody = document.getElementById('depositTableBody');
+  const alertEl = document.getElementById('depositAlert');
+  if (!tbody) return;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const deposits = [...(state.deposits || [])].sort((a,b) => (a.endDate||'').localeCompare(b.endDate||''));
+  if (!deposits.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Нет активных вкладов</td></tr>';
+    if (alertEl) alertEl.style.display = 'none';
+    return;
+  }
+  let near = [];
+  tbody.innerHTML = deposits.map(d => {
+    const end = d.endDate ? new Date(d.endDate + 'T00:00:00') : null;
+    const days = end ? Math.ceil((end - now) / 86400000) : null;
+    let status = '<span class="badge" style="background:rgba(138,148,166,0.15);color:var(--muted)">—</span>';
+    let rowClass = '';
+    if (days !== null) {
+      if (days < 0) { status = '<span class="badge" style="background:rgba(239,68,68,0.15);color:#f87171">истёк</span>'; rowClass = 'dep-row-expired'; }
+      else if (days <= 5) { status = `<span class="badge" style="background:rgba(245,158,11,0.25);color:#fbbf24">⚠ ${days} дн.</span>`; rowClass = 'dep-row-warn'; near.push(`${d.bank} • ${d.name||'вклад'} — через ${days} дн.`); }
+      else if (days <= 30) status = `<span class="badge" style="background:rgba(59,130,246,0.15);color:#60a5fa">${days} дн.</span>`;
+      else status = `<span class="badge" style="background:rgba(16,185,129,0.15);color:#34d399">${days} дн.</span>`;
+    }
+    const badge = d.bank === 'Альфа-Банк' ? 'b-alfa' : d.bank === 'Т-Банк' ? 'b-tbank' : 'b-sber';
+    return `<tr class="${rowClass}"><td><span class="badge ${badge}">${d.bank}</span></td><td>${d.name||'—'}</td><td class="num">${d.rate?d.rate+'%':'—'}</td><td class="num">${fmt(d.amount)}</td><td>${d.endDate?formatDisplayDate(d.endDate):'—'}</td><td style="text-align:right">${status} <button class="btn btn-sm btn-outline" onclick="deleteDeposit(${d.id})">✕</button></td></tr>`;
+  }).join('');
+  if (alertEl) {
+    alertEl.style.display = near.length ? 'block' : 'none';
+    if (near.length) alertEl.innerHTML = `⏰ <strong>Скоро закрытие:</strong><br>• ${near.join('<br>• ')}`;
+  }
+}
+
+function updateMiles() {
+  state.s7Miles = Math.max(0, parseFloat(document.getElementById('s7Miles').value)||0);
+  state.s7MilesGoal = Math.max(1, parseFloat(document.getElementById('s7Goal').value)||30000);
+  saveState();
   renderMiles();
+}
+function renderMiles() {
+  const miles = state.s7Miles || 0, goal = state.s7MilesGoal || 30000;
+  const pct = Math.min(100, miles / goal * 100);
+  const inp = document.getElementById('s7Miles'), gin = document.getElementById('s7Goal');
+  if (inp && document.activeElement !== inp) inp.value = miles;
+  if (gin && document.activeElement !== gin) gin.value = goal;
+  document.getElementById('s7Bar').style.width = pct + '%';
+  const txt = document.getElementById('s7Text');
+  txt.innerHTML = pct >= 100 ? `<strong style="color:var(--green)">✈ Билет закрыт милями!</strong>` : `${miles.toLocaleString('ru-RU')} из ${goal.toLocaleString('ru-RU')} (${pct.toFixed(1)}%)`;
+}
+
+function populateTaxYears() {
+  const sel = document.getElementById('taxYearSelect');
+  if (!sel) return;
+  const cur = new Date().getFullYear();
+  const years = new Set([cur, cur-1, cur+1]);
+  (state.logs||[]).forEach(l => { if (l.isoDate) years.add(parseInt(l.isoDate.slice(0,4))); });
+  sel.innerHTML = [...years].sort((a,b)=>b-a).map(y=>`<option value="${y}">${y}</option>`).join('');
+  sel.value = state.taxYear || cur;
+}
+function saveTaxCbRate() { state.taxCbRate = parseFloat(document.getElementById('taxCbRate').value)||16; saveState(); renderTax(); }
+function renderTax() {
+  const sel = document.getElementById('taxYearSelect');
+  const cbIn = document.getElementById('taxCbRate');
+  if (!sel || !cbIn) return;
+  if (document.activeElement !== cbIn) cbIn.value = state.taxCbRate || 16;
+  const year = parseInt(sel.value) || new Date().getFullYear();
+  state.taxYear = year;
+  const rate = parseFloat(cbIn.value) || 16;
+  const limit = Math.round(1000000 * rate / 100);
+  let interest = 0;
+  (state.logs||[]).forEach(l => { if (l.type === 'Проценты' && l.isoDate && parseInt(l.isoDate.slice(0,4)) === year) interest += Math.abs(l.amount); });
+  const remain = Math.max(0, limit - interest);
+  const excess = Math.max(0, interest - limit);
+  const tax = excess * 0.13;
+  document.getElementById('taxInterest').textContent = fmtExact(interest);
+  document.getElementById('taxLimit').textContent = fmt(limit);
+  document.getElementById('taxRemain').textContent = fmt(remain);
+  document.getElementById('taxExcess').textContent = fmt(excess);
+  document.getElementById('taxDue').textContent = tax > 0 ? fmtExact(tax) : 'Не начисляется';
+  document.getElementById('taxDue').style.color = tax > 0 ? 'var(--red)' : 'var(--green)';
+  saveState();
+}
+
+function renderCharts() {
+  const total = state.alfa + state.tbank + state.sber;
+  // Bank bars
+  const banks = [{n:'Альфа',v:state.alfa,c:'#ef4444'},{n:'Т-Банк',v:state.tbank,c:'#f59e0b'},{n:'Сбер',v:state.sber,c:'#10b981'}];
+  const maxB = Math.max(...banks.map(b=>b.v), 1000);
+  let bSvg = `<svg viewBox="0 0 380 150">`;
+  banks.forEach((b,i)=>{
+    const y=12+i*46; const w=Math.max(4,(b.v/maxB)*210);
+    bSvg += `<text x="0" y="${y+16}" fill="var(--text)" font-size="13" font-weight="600">${b.n}</text>
+             <rect x="80" y="${y}" width="210" height="26" rx="6" fill="color-mix(in srgb, var(--bg) 70%, var(--card))"/>
+             <rect x="80" y="${y}" width="${w}" height="26" rx="6" fill="${b.c}"/>
+             <text x="298" y="${y+17}" fill="var(--text)" font-size="12" font-weight="600">${Math.round(b.v).toLocaleString('ru-RU')}</text>`;
+  });
+  bSvg += `</svg>`;
+  document.getElementById('bankBarChart').innerHTML = bSvg;
+
+  // Budget bars
+  const flatRub = state.flatByn * state.rate;
+  const parts = [{n:'Квартира',v:flatRub,c:'#3b82f6'},{n:'Авто',v:state.carRub,c:'#8b5cf6'},{n:'Сетап',v:state.repairRub,c:'#f59e0b'},{n:'Переезд',v:state.moveRub,c:'#10b981'}];
+  const maxP = Math.max(...parts.map(p=>p.v),1);
+  let pSvg = `<svg viewBox="0 0 380 180">`;
+  parts.forEach((p,i)=>{
+    const y=8+i*42; const w=Math.max(4,(p.v/maxP)*200);
+    pSvg += `<text x="0" y="${y+16}" fill="var(--text)" font-size="12.5" font-weight="600">${p.n}</text>
+             <rect x="90" y="${y}" width="200" height="24" rx="6" fill="color-mix(in srgb, var(--bg) 70%, var(--card))"/>
+             <rect x="90" y="${y}" width="${w}" height="24" rx="6" fill="${p.c}"/>
+             <text x="298" y="${y+16}" fill="var(--text)" font-size="11.5">${(p.v/1e6).toFixed(2)} млн</text>`;
+  });
+  pSvg += `</svg>`;
+  document.getElementById('budgetBarChart').innerHTML = pSvg;
+
+  // Near-term fact vs plan
+  const milestones = [
+    {date:'2026-11-23',label:'23 ноя',plan:2861},{date:'2026-12-01',label:'1 дек',plan:6870},
+    {date:'2026-12-15',label:'15 дек',plan:16870},{date:'2027-01-01',label:'1 янв',plan:40035},
+    {date:'2027-01-15',label:'15 янв',plan:44035},{date:'2027-01-31',label:'31 янв',plan:49420},
+    {date:'2027-02-01',label:'1 фев',plan:50420}
+  ];
+  const sorted = [...state.logs].sort((a,b)=>(a.isoDate||'').localeCompare(b.isoDate||''));
+  const latest = sorted.length ? (sorted[sorted.length-1].isoDate || '2026-11-23') : '2026-11-23';
+  const facts = [];
+  milestones.forEach((m,idx)=>{
+    if (idx===0 || m.date <= latest) {
+      let sum = 0;
+      sorted.forEach(l => { if ((l.isoDate||'2026-11-23') <= m.date) sum += l.amount; });
+      if (idx===0 && latest <= '2026-11-23') sum = total;
+      facts.push({idx, val: Math.max(0,sum), plan:m.plan});
+    }
+  });
+  const last = facts[facts.length-1] || {plan:0};
+  const diff = total - last.plan;
+  const badge = document.getElementById('paceBadge');
+  if (diff > 50) { badge.textContent = `+${Math.round(diff).toLocaleString('ru-RU')} ₽`; badge.style.background='rgba(16,185,129,0.15)'; badge.style.color='var(--green)'; }
+  else if (diff < -50) { badge.textContent = `${Math.round(diff).toLocaleString('ru-RU')} ₽`; badge.style.background='rgba(239,68,68,0.15)'; badge.style.color='var(--red)'; }
+  else { badge.textContent = 'По плану'; badge.style.background='rgba(59,130,246,0.15)'; badge.style.color='var(--accent)'; }
+
+  const W=760, H=220, pL=58, pR=30, pT=20, pB=32;
+  const plW=W-pL-pR, plH=H-pT-pB;
+  const maxY = Math.max(55000, total*1.2);
+  let nSvg = `<svg viewBox="0 0 ${W} ${H}">`;
+  [0,15000,30000,45000,55000].forEach(v=>{
+    if (v>maxY) return;
+    const y = pT + plH - (v/maxY)*plH;
+    nSvg += `<line x1="${pL}" y1="${y}" x2="${W-pR}" y2="${y}" stroke="var(--border)" stroke-dasharray="4"/>
+             <text x="${pL-6}" y="${y+4}" fill="var(--muted)" font-size="11" text-anchor="end">${(v/1000)|0}к</text>`;
+  });
+  const planPts = milestones.map((m,i)=>{
+    const x = pL + (i/(milestones.length-1))*plW;
+    const y = pT + plH - (m.plan/maxY)*plH;
+    return `${x},${y}`;
+  }).join(' ');
+  nSvg += `<polyline fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 4" points="${planPts}"/>`;
+  milestones.forEach((m,i)=>{
+    const x = pL + (i/(milestones.length-1))*plW;
+    nSvg += `<text x="${x}" y="${H-8}" fill="var(--muted)" font-size="10.5" text-anchor="middle">${m.label}</text>`;
+  });
+  if (facts.length > 1) {
+    const fPts = facts.map(f=>{
+      const x = pL + (f.idx/(milestones.length-1))*plW;
+      const y = pT + plH - (f.val/maxY)*plH;
+      return `${x},${y}`;
+    }).join(' ');
+    nSvg += `<polyline fill="none" stroke="var(--yellow)" stroke-width="3.5" points="${fPts}"/>`;
+  }
+  facts.forEach((f,i)=>{
+    const x = pL + (f.idx/(milestones.length-1))*plW;
+    const val = i===facts.length-1 ? total : f.val;
+    const y = pT + plH - (val/maxY)*plH;
+    nSvg += `<circle cx="${x}" cy="${y}" r="5" fill="var(--yellow)" stroke="var(--bg)" stroke-width="2"/>
+             <text x="${x}" y="${y-10}" fill="var(--yellow)" font-size="11" font-weight="700" text-anchor="middle">${Math.round(val).toLocaleString('ru-RU')}</text>`;
+  });
+  nSvg += `</svg>`;
+  document.getElementById('nearTermChart').innerHTML = nSvg;
+
+  // Long-term
+  const infl = [{l:'2026',v:0.003},{l:'2027',v:0.28},{l:'2028',v:0.45},{l:'2029',v:1.89},{l:'2030',v:6.2},{l:'2031',v:11.8},{l:'2032',v:18}];
+  const base = [0.003,0.28,0.45,1.5,4.5,8.2,12];
+  const maxL = Math.max(18, total/1e6);
+  let lSvg = `<svg viewBox="0 0 ${W} ${H}">`;
+  [0,4.5,9,13.5,18].forEach(v=>{
+    const y = pT + plH - (v/maxL)*plH;
+    lSvg += `<line x1="${pL}" y1="${y}" x2="${W-pR}" y2="${y}" stroke="var(--border)" stroke-dasharray="4"/>
+             <text x="${pL-6}" y="${y+4}" fill="var(--muted)" font-size="11" text-anchor="end">${v}</text>`;
+  });
+  const iPts = infl.map((p,i)=>{
+    const x = pL + (i/(infl.length-1))*plW;
+    const y = pT + plH - (p.v/maxL)*plH;
+    return `${x},${y}`;
+  }).join(' ');
+  const bPts = base.map((v,i)=>{
+    const x = pL + (i/(base.length-1))*plW;
+    const y = pT + plH - (v/maxL)*plH;
+    return `${x},${y}`;
+  }).join(' ');
+  lSvg += `<polyline fill="none" stroke="var(--green)" stroke-width="2.5" points="${iPts}"/>
+           <polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3" points="${bPts}"/>`;
+  const curX = pL + (0 / 6) * plW; // rough position for 2026
+  const curY = pT + plH - ((total/1e6)/maxL)*plH;
+  lSvg += `<circle cx="${curX}" cy="${curY}" r="6" fill="var(--yellow)" stroke="var(--bg)" stroke-width="2"/>
+           <text x="${curX}" y="${curY-12}" fill="var(--yellow)" font-size="11" font-weight="700" text-anchor="middle">${(total/1e6).toFixed(2)} млн</text>`;
+  infl.forEach((p,i)=>{
+    const x = pL + (i/(infl.length-1))*plW;
+    lSvg += `<text x="${x}" y="${H-8}" fill="var(--muted)" font-size="10.5" text-anchor="middle">${p.l}</text>`;
+  });
+  lSvg += `</svg>`;
+  document.getElementById('growthLineChart').innerHTML = lSvg;
+}
+
+function addManualLog() {
+  const bank = document.getElementById('logBank').value;
+  const type = document.getElementById('logType').value;
+  let amount = parseFloat(document.getElementById('logAmount').value);
+  if (!amount || amount <= 0) return toast('Укажите сумму');
+  if (type === 'Снятие') amount = -Math.abs(amount);
+  else amount = Math.abs(amount);
+  const iso = document.getElementById('logDateInput').value || getTodayISO();
+  const note = document.getElementById('logNote').value.trim() || type;
+  const key = bank === 'Альфа-Банк' ? 'alfa' : bank === 'Т-Банк' ? 'tbank' : 'sber';
+  state[key] = +(state[key] + amount).toFixed(2);
+  state.logs.unshift({ id: Date.now(), isoDate: iso, date: formatDisplayDate(iso), bank, type, amount, note });
+  document.getElementById('logAmount').value = '';
+  document.getElementById('logNote').value = '';
+  updateAll();
+  renderReport();
+  toast('Операция записана');
+}
+
+function deleteLog(id) {
+  if (!confirm('Удалить операцию? Баланс не изменится автоматически.')) return;
+  state.logs = state.logs.filter(l => l.id !== id);
+  saveState();
+  renderReport();
+}
+
+function renderReport() {
+  const q = (document.getElementById('logSearch')?.value || '').toLowerCase();
+  const logs = (state.logs || []).filter(l => {
+    if (!q) return true;
+    return (l.bank+l.type+l.note+l.date).toLowerCase().includes(q);
+  });
+  document.getElementById('repCount').textContent = state.logs.length;
+  let dep = 0, int = 0;
+  state.logs.forEach(l => {
+    if (l.type === 'Пополнение') dep += Math.abs(l.amount);
+    if (l.type === 'Проценты') int += Math.abs(l.amount);
+  });
+  document.getElementById('repDeposits').textContent = fmt(dep);
+  document.getElementById('repInterest').textContent = fmt(int);
+  const tbody = document.getElementById('logTableBody');
+  tbody.innerHTML = logs.length ? logs.map(l => {
+    const badge = l.bank === 'Альфа-Банк' ? 'b-alfa' : l.bank === 'Т-Банк' ? 'b-tbank' : 'b-sber';
+    const color = l.amount >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<tr><td>${l.date}</td><td><span class="badge ${badge}">${l.bank}</span></td><td>${l.type}</td><td>${l.note||''}</td><td class="num" style="color:${color}">${l.amount>0?'+':''}${fmtExact(l.amount)}</td><td><button class="btn btn-sm btn-outline" onclick="deleteLog(${l.id})">✕</button></td></tr>`;
+  }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Нет операций</td></tr>';
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `minsk-2032-backup-${getTodayISO()}.json`;
+  a.click();
+  toast('Бэкап скачан');
+}
+function importJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (data && typeof data === 'object') {
+        state = { ...JSON.parse(JSON.stringify(defaultState)), ...data };
+        saveState();
+        initInputs();
+        updateAll();
+        toast('Данные загружены');
+      }
+    } catch { toast('Ошибка файла'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+function resetAll() {
+  if (!confirm('Сбросить все данные? Это действие нельзя отменить.')) return;
+  localStorage.removeItem('minskTrackerV3');
+  location.reload();
+}
+
+function initInputs() {
+  document.getElementById('alfa').value = state.alfa;
+  document.getElementById('tbank').value = state.tbank;
+  document.getElementById('sber').value = state.sber;
+  document.getElementById('goal').value = state.goal;
+  document.getElementById('rate').value = state.rate;
+  document.getElementById('flatByn').value = state.flatByn;
+  document.getElementById('carRub').value = state.carRub;
+  document.getElementById('repairRub').value = state.repairRub;
+  document.getElementById('moveRub').value = state.moveRub;
+  document.getElementById('headerByn').textContent = state.rate.toFixed(2) + ' ₽';
+  document.getElementById('headerUsd').textContent = state.usdRate.toFixed(2) + ' ₽';
+  document.getElementById('logDateInput').value = getTodayISO();
+  applyTheme();
+  renderMiles();
+  renderDepositList();
   populateTaxYears();
   renderTax();
   updateConverter();
-  fetchRates();
+  updateAll();
+}
 
-  // Регистрация Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
-        .then(reg => { reg.update(); })
-        .catch(() => {});
-    });
-    let refreshing = false;
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (!refreshing) {
-        refreshing = true;
-        window.location.reload();
-      }
-    });
-  }
+document.getElementById('themeToggle').onclick = toggleTheme;
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+initInputs();
+fetchRates();
 </script>
 </body>
 </html>
