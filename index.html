@@ -89,6 +89,15 @@
 
   <input type="search" class="search" id="searchInput" placeholder="Поиск по проектам..." oninput="filterCards()">
 
+  
+  <div id="hubSummary" class="card" style="margin-bottom:16px; display:none;">
+    <div class="card-top">
+      <span class="card-title">Minsk 2032 — сводка</span>
+      <span class="tag tag-green" id="hubPct">—</span>
+    </div>
+    <p class="card-desc" id="hubCapital">Загрузка...</p>
+  </div>
+
   <div class="section-title">Мои проекты</div>
   <div class="grid">
     <a href="./minsk-plan/" class="card">
@@ -132,9 +141,37 @@
     const next = current === 'light' ? 'dark' : 'light';
     localStorage.setItem('hubTheme', next);
     applyTheme();
+
+  try {
+    const raw = localStorage.getItem("minskTrackerV3");
+    if (raw) {
+      const st = JSON.parse(raw);
+      const total = (st.alfa||0)+(st.tbank||0)+(st.sber||0);
+      const goal = st.goal || 18000000;
+      const pct = goal ? Math.min(100, (total/goal)*100).toFixed(1) : 0;
+      document.getElementById("hubSummary").style.display = "block";
+      document.getElementById("hubCapital").textContent = "Накоплено: " + Math.round(total).toLocaleString("ru-RU") + " ₽";
+      document.getElementById("hubPct").textContent = pct + "%";
+    }
+  } catch(e) {}
+
   }
   document.getElementById('themeToggle').onclick = toggleTheme;
   applyTheme();
+
+  try {
+    const raw = localStorage.getItem("minskTrackerV3");
+    if (raw) {
+      const st = JSON.parse(raw);
+      const total = (st.alfa||0)+(st.tbank||0)+(st.sber||0);
+      const goal = st.goal || 18000000;
+      const pct = goal ? Math.min(100, (total/goal)*100).toFixed(1) : 0;
+      document.getElementById("hubSummary").style.display = "block";
+      document.getElementById("hubCapital").textContent = "Накоплено: " + Math.round(total).toLocaleString("ru-RU") + " ₽";
+      document.getElementById("hubPct").textContent = pct + "%";
+    }
+  } catch(e) {}
+
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
